@@ -1,12 +1,20 @@
 # AutoCorrector for Engineering Informatics 1
 
+This project runs on `python 3.7`.
+
 <br/>
-This project runs on `python 3.7`. Install all requirements with:
+<br/>
+
+Install all requirements with:
 
 ```bash
 pip install -r requirements.txt
 ```
 
+Run the tests with:
+```bash
+python3 __init__.py 
+```
 
 <br/>
 
