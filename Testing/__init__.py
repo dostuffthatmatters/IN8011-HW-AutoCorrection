@@ -104,7 +104,7 @@ def test_homework():
             continue  # Jump to next attendee
 
         # -------------------------------------------------------------------------------------------------------------
-        # Test 2: Does the zip-file contains all the required files?
+        # Test 2: Does the zip-file contain all the required files?
 
         # Extract files from zip-files
         zip_file_path = student_path + "/" + directory_content[0]
