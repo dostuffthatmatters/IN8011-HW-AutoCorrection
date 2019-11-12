@@ -3,7 +3,6 @@
 This project runs on `python 3.7`.
 
 <br/>
-<br/>
 
 Install all requirements with:
 
