@@ -1,6 +1,6 @@
 ## Testing all submissions for Homework 01
 
-**4 have been submitted.**
+**4 submissions have been tested.**
 
 
 

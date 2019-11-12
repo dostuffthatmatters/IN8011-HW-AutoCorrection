@@ -36,7 +36,7 @@ def test_homework():
     results = {}
     markdown_object = CustomMarkdown(PROTOCOL_LOCATION)
     markdown_object.write_h2("Testing all submissions for Homework 01")
-    markdown_object.write_text(text=f"{len(os.listdir(SUBMISSION_DIRECTORY))} have been submitted.", bold=True, new_lines=1)
+    markdown_object.write_text(text=f"{len(os.listdir(SUBMISSION_DIRECTORY))} submissions have been tested.", bold=True, new_lines=1)
 
 
 
