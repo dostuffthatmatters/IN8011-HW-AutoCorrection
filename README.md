@@ -1,12 +1,12 @@
-## AutoCorrector for Engineering Informatics 1
+# AutoCorrector for Engineering Informatics 1
 
-
-
+<br/>
 This project runs on `python 3.7`. Install all requirements with `pip install -r requirements.txt`.
 
 
+<br/>
 
-#### File Structure
+### File Structure
 
 Inside the directory **`Helpers`** you can find Helper Library which are not specifically part of this usecase.
 
@@ -17,8 +17,9 @@ Inside **`HW1`** you can find the actual submission files used to demonstrate th
 Inside **`Testing`** you can find the actual testing-procedure.
 
 
+<br/>
 
-#### Setup
+### Setup
 
 Inside **`config.py`** you can set the homeworks requirements (which files do they need to submit, which files do we give them, e.g. `main.c`?).
 
@@ -41,16 +42,18 @@ You also have to list:
 Lastly you have to specify which files need to be compiled in `FILES_TO_COMPILE`.
 
 
+<br/>
 
-#### Usage
+### Usage
 
 Once you’ve set up the configuration you can run the file `AutoCorrection.__init__.py`.
 
 The test protocol will be generated at the location you’ve specified in `PROTOCOL_LOCATION`.
 
 
+<br/>
 
-#### Testing Procedure
+### Testing Procedure
 
 I store all results in a python dictionary - similar to a hash table.
 
