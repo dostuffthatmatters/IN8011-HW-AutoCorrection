@@ -9,7 +9,7 @@ import time
 from Helpers.custom_printing import CustomPrinting
 from Helpers.custom_markdown import CustomMarkdown
 
-from config import GIVEN_DIRECTORY, SUBMISSION_DIRECTORY, GIVEN_FILES, SUBMISSION_FILES, FILES_TO_COMPILE, PROTOCOL_LOCATION
+from config_01 import GIVEN_DIRECTORY, SUBMISSION_DIRECTORY, GIVEN_FILES, SUBMISSION_FILES, FILES_TO_COMPILE, PROTOCOL_LOCATION
 
 
 

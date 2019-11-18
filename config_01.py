@@ -2,11 +2,11 @@
 # Inside here you put all the files that have been provided for
 # this homework -> The ones they didn't have to write by themselves,
 # e.g. the testing "main"-file
-GIVEN_DIRECTORY = "HW1/given"
+GIVEN_DIRECTORY = "HW01/given"
 
 # Inside here you put each submittees folder that you've downloaded
 # from moodle -> In here are all the "..._assignsubmission_file_"-folders
-SUBMISSION_DIRECTORY = "HW1/submission"
+SUBMISSION_DIRECTORY = "HW01/submission"
 
 
 
@@ -24,5 +24,5 @@ FILES_TO_COMPILE = ["main_partial_correction.c"]
 
 
 # Where should the resulting markdown file be put
-PROTOCOL_LOCATION = "testing_protocol_hw1.md"
+PROTOCOL_LOCATION = "testing_protocol_hw01.md"
 
