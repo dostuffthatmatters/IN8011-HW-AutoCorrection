@@ -57,6 +57,9 @@ Lastly you have to specify which files need to be compiled in `FILES_TO_COMPILE`
 
 ### Usage
 
+Copy all files into the folders `HW.../given` and `HW.../submission` (See the example for HW1 for that).
+Inside `Testing/__init__.py` specify which `config_....py` to use.
+
 Once you’ve set up the configuration you can run the file `AutoCorrection.__init__.py`.
 
 The test protocol will be generated at the location you’ve specified in `PROTOCOL_LOCATION`.
