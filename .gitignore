@@ -2,11 +2,9 @@ testing_env
 .DS_Store
 
 HW02
-config_02.py
 testing_protocol_hw02.md
 
 HW03
-config_03.py
 testing_protocol_hw03.md
 
 HW04

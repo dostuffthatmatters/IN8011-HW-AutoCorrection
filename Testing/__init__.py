@@ -170,7 +170,7 @@ def test_homework():
 
         results[name]["result"] = "Success"
         results[name]["exit_code"] = exit_code
-        results[name]["output"] = output.decode()
+        results[name]["output"] = output.decode("utf-8", "replace")
         results[name]["input"] = {}
 
         for homework_file in SUBMISSION_FILES:
