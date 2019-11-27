@@ -9,14 +9,16 @@ import time
 from Helpers.custom_printing import CustomPrinting
 from Helpers.custom_markdown import CustomMarkdown
 
-from config_03 import GIVEN_DIRECTORY, SUBMISSION_DIRECTORY, GIVEN_FILES, SUBMISSION_FILES, FILES_TO_COMPILE, PROTOCOL_LOCATION
+from config_01 import GIVEN_DIRECTORY, SUBMISSION_DIRECTORY, GIVEN_FILES, SUBMISSION_FILES, FILES_TO_COMPILE, PROTOCOL_LOCATION
 
 
 
 def remove_path(path):
     try:
+        # If the path is a file or an empty directory
         os.remove(path)
     except PermissionError:
+        # Otherwise
         shutil.rmtree(path)
 
 
