@@ -9,7 +9,7 @@ import time
 from Helpers.custom_printing import CustomPrinting
 from Helpers.custom_markdown import CustomMarkdown
 
-from config_01 import GIVEN_DIRECTORY, SUBMISSION_DIRECTORY, GIVEN_FILES, SUBMISSION_FILES, FILES_TO_COMPILE, PROTOCOL_LOCATION
+from config_03 import GIVEN_DIRECTORY, SUBMISSION_DIRECTORY, GIVEN_FILES, SUBMISSION_FILES, FILES_TO_COMPILE, PROTOCOL_LOCATION
 
 
 
@@ -191,7 +191,7 @@ def test_homework():
 
     # Generating the test protocol as a markdown file
     time.sleep(0.05)
-    for name in results:
+    for name in sorted(results.keys()):
         markdown_object.write_horizontal_line()
 
         if results[name]["result"] == "Failed":
@@ -216,7 +216,7 @@ def test_homework():
 
     # Print out a short version of the test protocol
     time.sleep(0.05)
-    for name in results:
+    for name in sorted(results.keys()):
         CustomPrinting.print("\n" * 2 + "#" * 120 + "\n" * 2, bold=True)
         if results[name]["result"] == "Failed":
             CustomPrinting.print_red(f"{name} -> Failed:", bold=True)
