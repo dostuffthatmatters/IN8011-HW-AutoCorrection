@@ -88,5 +88,5 @@ Roughly the testing procedure:
 
 Only a short version of the test protocol will be printed out to the console. Example for HW1:
 
-![](Example_for_HW1/terminal_output.png)
+![](Example_for_HW01/terminal_output.png)
 

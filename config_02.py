@@ -16,11 +16,10 @@ GIVEN_FILES = ["main_bot.c"]
 # The files that are required to be in the submitted zip-file
 SUBMISSION_FILES = ["lonely_bot.c"]
 
-
-
 # These are alle the files that should be compiled and linked together
 # May not be equal to SUBMISSION_FILES + HOMEWORK_FILES
 FILES_TO_COMPILE = ["main_bot.c"]
+
 
 
 # Where should the resulting markdown file be put
