@@ -17,6 +17,7 @@ Inside **`examples/`** you can find an example for how the console- and the mark
     ```bash
     pip install poetry
     poetry install
+    pytest  # optional
     ```
 
 2. Paste the submission you downloaded from moodle into `HW*/submissions`

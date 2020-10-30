@@ -27,7 +27,7 @@ def print_report(results):
 
 
 def generate_md_report(results, hw_number):
-    location = f"reports/report_HW{'0' if hw_number < 10 else ''}{hw_number}.md"
+    location = f"reports/results_HW{'0' if hw_number < 10 else ''}{hw_number}.md"
     markdown_object = CustomMarkdown(location)
 
     markdown_object.write_h2(

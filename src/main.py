@@ -7,7 +7,7 @@ from time import sleep
 from src.utilities.custom_printing import CustomPrinting
 from src.utilities.validation import validate_config_format
 from src.utilities.reporting import generate_md_report, print_report
-from src.utilities.testing import test_single_submission
+from src.utilities.testing import run_single_submission_test
 
 
 def log(step_no, text):
@@ -37,7 +37,7 @@ def clear_submission_directory(directory):
         shutil.rmtree(f"{directory}/{filename}")
 
 
-def test_all_submissions(config):
+def run_all_submission_tests(config, print_results=True):
 
     validate_config_format(config)
 
@@ -57,7 +57,7 @@ def test_all_submissions(config):
 
     results = {}
     for filename in tqdm(filenames):
-        results[filename] = test_single_submission(
+        results[filename] = run_single_submission_test(
             filename, config
         )
 
@@ -73,9 +73,10 @@ def test_all_submissions(config):
         HW_NUMBER
     )
 
-    # *************************************************************************
-    log(6, "Printing short report to console")
-    print_report(results)
+    if print_results:
+        # *********************************************************************
+        log(6, "Printing short report to console")
+        print_report(results)
 
 
 def prepare_test_directories():
