@@ -1,6 +1,6 @@
 
-from app.main import run_homework_tests
+from app.main import test_all_submissions
 from configs.config_01 import config
 
 if __name__ == "__main__":
-    run_homework_tests(config)
+    test_all_submissions(config)
