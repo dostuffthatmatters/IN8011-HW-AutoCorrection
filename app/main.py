@@ -49,32 +49,34 @@ def run_homework_tests(config):
     SUBMISSION_DIRECTORY = f"{HW_NUMBER_STR}/submission"
     PROTOCOL_LOCATION = f"reports/report_{HW_NUMBER_STR}.md"
 
+    os.chdir(SUBMISSION_DIRECTORY)
+
     GIVEN_FILES = config.get("GIVEN_FILES")
     SUBMISSION_FILES = config.get("SUBMISSION_FILES")
     FILES_TO_COMPILE = config.get("FILES_TO_COMPILE")
 
     results = {}
-    submission_folders = os.listdir(SUBMISSION_DIRECTORY)
+    submission_folders = os.listdir('.')
 
     # *************************************************************************
     log(1, "Removing all unwanted files from the submission directory")
-    clear_submission_directory(SUBMISSION_DIRECTORY)
+    clear_submission_directory('.')
 
     # *************************************************************************
     log(2, "Creating testing directories")
 
     # Creating renamed testing directories
-    for filename in tqdm(os.listdir(SUBMISSION_DIRECTORY)):
+    for filename in tqdm(os.listdir('.')):
         # The format in which moodle provides the submitted files
         if filename.endswith("_assignsubmission_file_"):
             new_filename = filename.split("_")[0].lower().replace(" ", "-")
             shutil.copytree(
-                f"{SUBMISSION_DIRECTORY}/{filename}",
-                f"{SUBMISSION_DIRECTORY}/{new_filename}"
+                f"./{filename}",
+                f"./{new_filename}"
             )
             results[new_filename] = {}
         else:
-            os.remove(SUBMISSION_DIRECTORY + "/" + filename)
+            os.remove(f"./{filename}")
 
     # *************************************************************************
     # Step 2: Actually Testing each submission
@@ -85,18 +87,19 @@ def run_homework_tests(config):
         # *********************************************************************
         # Test 1: Is there exactly one zip-file?
 
-        directory_content = os.listdir(SUBMISSION_DIRECTORY + "/" + filename)
+        directory_content = os.listdir(f"./{filename}")
         if len(directory_content) > 1:
             results[filename]["result"] = "Failed"
-            results[filename]["message"] = f"Too many zip-files in directory: {directory_content}"
+            results[filename]["message"] = f"Too many zip-files in directory: " + \
+                "{directory_content}"
             continue  # Jump to next attendee
 
         # *********************************************************************
         # Test 2: Does the zip-file contain all the required files?
 
         # Extract files from zip-files
-        student_path = SUBMISSION_DIRECTORY + "/" + filename
-        zip_file_path = student_path + "/" + directory_content[0]
+        student_path = f"./{filename}"
+        zip_file_path = f"./{filename}/{directory_content[0]}"
         with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
             zip_ref.extractall(student_path)
 
@@ -123,19 +126,19 @@ def run_homework_tests(config):
 
         # Copy all given files into the students directory to compile them together
         for given_file in GIVEN_FILES:
-            source = f"{GIVEN_DIRECTORY}/{given_file}"
-            destination = f"{SUBMISSION_DIRECTORY}/{filename}/{given_file}"
+            source = f"../given/{given_file}"
+            destination = f"./{filename}/{given_file}"
             shutil.copyfile(source, destination)
 
         # Validate the state of the compilation directory
-        directory_content = os.listdir(f"{SUBMISSION_DIRECTORY}/{filename}")
+        directory_content = os.listdir(f"./{filename}")
         assert(all([
             file in directory_content for file in (SUBMISSION_FILES + GIVEN_FILES)
         ]))
 
         # Determining the compilation string
         compilation_string = generate_compilation_string(
-            f"{SUBMISSION_DIRECTORY}/{filename}", FILES_TO_COMPILE
+            f"./{filename}", FILES_TO_COMPILE
         )
 
         # Compiling the file
@@ -154,7 +157,7 @@ def run_homework_tests(config):
 
             for file in SUBMISSION_FILES:
                 results[filename]["input"][file] = open(
-                    f"{SUBMISSION_DIRECTORY}/{filename}/{file}", 'r'
+                    f"./{filename}/{file}", 'r'
                 ).read()
 
             continue  # Jump to next attendee
@@ -162,7 +165,7 @@ def run_homework_tests(config):
         # *********************************************************************
         # Test 4 (Manual): Execute the file and store the generated output
 
-        execution_string = f"./{SUBMISSION_DIRECTORY}/{filename}/program.out"
+        execution_string = f"./{filename}/program.out"
 
         # Executing the file
         process = subprocess.Popen(
@@ -179,20 +182,19 @@ def run_homework_tests(config):
 
         for file in SUBMISSION_FILES:
             results[filename]["input"][file] = open(
-                f"{SUBMISSION_DIRECTORY}/{filename}/{file}", 'r'
+                f"./{filename}/{file}", 'r'
             ).read()
 
-        # ---------------------------------------------------------------------
-
-    # Removing all files except for the zip-file
+    # *************************************************************************
     log(4, "Removing test directories")
-    clear_submission_directory(SUBMISSION_DIRECTORY)
+    clear_submission_directory('.')
+    os.chdir("../../")
 
-    # Generating the test protocol as a markdown file
+    # *************************************************************************
     log(5, "Generating full report in markdown")
     generate_md_report(results, PROTOCOL_LOCATION, HW_NUMBER)
 
-    # Print out a short version of the test protocol
+    # *************************************************************************
     log(6, "Printing short report to console")
     print_report(results)
 
