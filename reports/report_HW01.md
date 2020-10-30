@@ -210,8 +210,8 @@ int calc_n(double h) {
 
 
 ```bash
-Did not compile: In file included from HW01/submission/max-mustermann03/main_partial_correction.c:11:
-HW01/submission/max-mustermann03/partial_sum.c:29:16: error: expected expression
+Did not compile: In file included from ./max-mustermann03/main_partial_correction.c:11:
+./max-mustermann03/partial_sum.c:29:16: error: expected expression
     while (i < = n);
                ^
 1 error generated.
@@ -305,7 +305,7 @@ int calc_n(double h){
 
 
 ```bash
-Wrong files in zip-file: Desired: ['HW1_Mustermann04_Max.zip', 'partial_sum.c'], Actual: ['HW1_Mustermann04_Max.zip']
+Wrong files in zip-file: Desired: ['HW1_Mustermann04_Max.zip', 'partial_sum.c'], Actual: ['New folder', '__MACOSX', 'HW1_Mustermann04_Max.zip']
 ```
 
 

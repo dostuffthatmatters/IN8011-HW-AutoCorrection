@@ -22,9 +22,10 @@ def print_report(results):
     CustomPrinting.print("\n" * 2 + "#" * 120 + "\n" * 2, bold=True)
 
 
-def generate_md_report(results, location, hw_number):
-
+def generate_md_report(results, hw_number):
+    location = f"reports/report_HW{'0' if hw_number < 10 else ''}{hw_number}.md"
     markdown_object = CustomMarkdown(location)
+
     markdown_object.write_h2(
         f"Testing all submissions for Homework {hw_number}")
     markdown_object.write_text(
