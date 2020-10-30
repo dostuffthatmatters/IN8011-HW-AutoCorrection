@@ -1,0 +1,14 @@
+[tool.poetry]
+name = "IN8011-HW-AutoCorrection"
+version = "1.0.0"
+description = "Tool for testing homework submissions for the IN8011 lecture at TUM"
+authors = ["Moritz Makowski <moritz@dostuffthatmatters.dev>"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+tqdm = "^4.51.0"
+autopep8 = "^1.5.4"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

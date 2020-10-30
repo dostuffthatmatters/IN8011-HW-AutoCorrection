@@ -1,4 +1,4 @@
-## Testing all submissions for Homework 01
+## Testing all submissions for Homework 1
 
 **4 submissions have been tested.**
 
@@ -10,7 +10,7 @@
 
 
 
-#### <span style='color: rgb(0, 200, 0)'>Max Mustermann01 -> Successful until execution:</span>
+#### <span style='color: rgb(0, 200, 0)'>max-mustermann01 -> Successful until execution:</span>
 
 **Output Stream:**
 
@@ -109,7 +109,7 @@ int calc_n(double h){
 
 
 
-#### <span style='color: rgb(0, 200, 0)'>Max Mustermann02 -> Successful until execution:</span>
+#### <span style='color: rgb(0, 200, 0)'>max-mustermann02 -> Successful until execution:</span>
 
 **Output Stream:**
 
@@ -206,12 +206,12 @@ int calc_n(double h) {
 
 
 
-#### <span style='color: rgb(255, 0, 0)'>Max Mustermann03 -> Failed:</span>
+#### <span style='color: rgb(255, 0, 0)'>max-mustermann03 -> Failed:</span>
 
 
 ```bash
-Did not compile: In file included from HW1/submission/Submission_Max_Mustermann03/main_partial_correction.c:11:
-HW1/submission/Submission_Max_Mustermann03/partial_sum.c:29:16: error: expected expression
+Did not compile: In file included from ./max-mustermann03/main_partial_correction.c:11:
+./max-mustermann03/partial_sum.c:29:16: error: expected expression
     while (i < = n);
                ^
 1 error generated.
@@ -301,19 +301,11 @@ int calc_n(double h){
 
 
 
-#### <span style='color: rgb(255, 0, 0)'>Max Mustermann04 -> Failed:</span>
+#### <span style='color: rgb(255, 0, 0)'>max-mustermann04 -> Failed:</span>
 
 
 ```bash
 Wrong files in zip-file: Desired: ['HW1_Mustermann04_Max.zip', 'partial_sum.c'], Actual: ['New folder', '__MACOSX', 'HW1_Mustermann04_Max.zip']
 ```
-
-
-
-
-
----
-
-
 
 
