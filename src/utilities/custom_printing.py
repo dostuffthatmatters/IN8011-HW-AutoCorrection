@@ -64,16 +64,3 @@ class CustomPrinting(object):
     @staticmethod
     def get_underlined_text(text):
         return CustomPrinting.UNDERLINE + str(text) + CustomPrinting.ENDC
-
-
-if __name__ == "__main__":
-    CustomPrinting.print_line(new_lines=2)
-
-    for color in ['default', 'green', 'yellow', 'red', 'pink', 'blue']:
-        for bold in [False, True]:
-            for underline in [False, True]:
-                CustomPrinting.print(
-                    f"print(color='{color}', bold='{bold}', underlime='{underline}')",
-                    color=color, bold=bold, underline=underline, new_lines=2
-                )
-        CustomPrinting.print_line(new_lines=2)

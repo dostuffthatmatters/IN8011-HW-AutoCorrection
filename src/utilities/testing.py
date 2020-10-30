@@ -5,7 +5,7 @@ import zipfile
 import subprocess
 
 
-def test_single_submission(filename, config):
+def run_single_submission_test(filename, config):
     GIVEN_FILES = config.get("GIVEN_FILES")
     SUBMISSION_FILES = config.get("SUBMISSION_FILES")
     COMPILATION_FILES = config.get("COMPILATION_FILES")

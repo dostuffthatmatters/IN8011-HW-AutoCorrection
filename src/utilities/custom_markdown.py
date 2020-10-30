@@ -6,16 +6,15 @@ I don't know why but somehow you crazy many new_line characters
 so that they show any effect inside the markdown file...
 """
 
+
 class CustomMarkdown(object):
 
     def __init__(self, file_name):
-        if file_name.split(".")[-1] != "md":
-            raise Exception
+        assert(file_name.endswith(".md"))
+        assert(not os.path.isdir(file_name))
 
         if os.path.isfile(file_name):
             os.remove(file_name)
-        elif os.path.isdir(file_name):
-            shutil.rmtree(file_name)
 
         open(file_name, 'a').close()
 
@@ -28,57 +27,35 @@ class CustomMarkdown(object):
         elif isinstance(color, str):
             return f"<span style='color: {'#' if text[0] != '#' else ''}{color}'>{text}</span>"
         elif isinstance(color, list) or isinstance(color, tuple):
+            assert(len(color) == 3)
             return f"<span style='color: rgb({color[0]}, {color[1]}, {color[2]})'>{text}</span>"
 
-
-    def write_h1(self, text="include_text", color=None):
+    def write_heading(self, text, heading_type='h1', color=None):
+        assert(heading_type in ['h1', 'h2', 'h3', 'h4', 'h5'])
         file_object = open(self.file_name, "a")
-        file_object.write(f"# {CustomMarkdown.apply_color(text, color)}\n\n")
+        file_object.write(
+            f"{'#' * int(heading_type[1])} " +
+            f"{CustomMarkdown.apply_color(text, color)}\n\n"
+        )
         file_object.close()
 
-    def write_h2(self, text="include_text", color=None):
-        file_object = open(self.file_name, "a")
-        file_object.write(f"## {CustomMarkdown.apply_color(text, color)}\n\n")
-        file_object.close()
-
-    def write_h3(self, text="include_text", color=None):
-        file_object = open(self.file_name, "a")
-        file_object.write(f"### {CustomMarkdown.apply_color(text, color)}\n\n")
-        file_object.close()
-
-    def write_h4(self, text="include_text", color=None):
-        file_object = open(self.file_name, "a")
-        file_object.write(f"#### {CustomMarkdown.apply_color(text, color)}\n\n")
-        file_object.close()
-
-    def write_codeblock(self, code="", language="", new_lines=1):
+    def write_codeblock(self, code, language="", new_lines=1):
         file_object = open(self.file_name, "a")
         file_object.write(f"\n```{language}\n")
         file_object.write(f"{code}\n")
         file_object.write(f"```\n\n" + "\n" * new_lines)
         file_object.close()
 
-    def write_text(self, text="include_text", bold=False, italic=False, new_lines=0, color=None):
+    def write_text(self, text, bold=False, italic=False, new_lines=0, color=None):
         file_object = open(self.file_name, "a")
-        appendix = ("*" if italic else "") + ("**" if bold else "")
-        file_object.write(f"{appendix}{CustomMarkdown.apply_color(text, color)}{appendix}\n" + "\n" * new_lines)
-        file_object.close()
-
-    def write_encapsulated(self, text="include_text", color=None):
-        file_object = open(self.file_name, "a")
-        file_object.write(f"`{CustomMarkdown.apply_color(text, color)}`")
-        file_object.close()
-
-    def write_encapsulated(self, text="include_text", color=None):
-        file_object = open(self.file_name, "a")
-        file_object.write(f"`{CustomMarkdown.apply_color(text, color)}`")
+        wrapper = ("*" * italic) + ("**" * bold)
+        file_object.write(
+            f"{wrapper}{CustomMarkdown.apply_color(text, color)}" +
+            f"{wrapper}\n" + "\n" * new_lines
+        )
         file_object.close()
 
     def write_horizontal_line(self):
         file_object = open(self.file_name, "a")
         file_object.write(f"\n\n\n---\n\n\n\n\n")
         file_object.close()
-
-
-if __name__ == "__main__":
-    pass

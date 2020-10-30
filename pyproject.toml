@@ -7,7 +7,11 @@ authors = ["Moritz Makowski <moritz@dostuffthatmatters.dev>"]
 [tool.poetry.dependencies]
 python = "^3.7"
 tqdm = "^4.51.0"
+
+[tool.poetry.dev-dependencies]
 autopep8 = "^1.5.4"
+pytest = "^6.1.2"
+pytest-cov = "^2.10.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

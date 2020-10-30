@@ -1,6 +1,6 @@
 
-from src.main import test_all_submissions
+from src.main import run_all_submission_tests
 from configs.config_01 import config
 
 if __name__ == "__main__":
-    test_all_submissions(config)
+    run_all_submission_tests(config)
