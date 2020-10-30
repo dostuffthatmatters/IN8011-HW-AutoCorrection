@@ -4,10 +4,10 @@ import shutil
 from tqdm import tqdm
 from time import sleep
 
-from app.utilities.custom_printing import CustomPrinting
-from app.utilities.validation import validate_config_format
-from app.utilities.reporting import generate_md_report, print_report
-from app.utilities.testing import test_single_submission
+from src.utilities.custom_printing import CustomPrinting
+from src.utilities.validation import validate_config_format
+from src.utilities.reporting import generate_md_report, print_report
+from src.utilities.testing import test_single_submission
 
 
 def log(step_no, text):

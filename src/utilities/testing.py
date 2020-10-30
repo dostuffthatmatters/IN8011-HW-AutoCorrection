@@ -8,7 +8,7 @@ import subprocess
 def test_single_submission(filename, config):
     GIVEN_FILES = config.get("GIVEN_FILES")
     SUBMISSION_FILES = config.get("SUBMISSION_FILES")
-    FILES_TO_COMPILE = config.get("FILES_TO_COMPILE")
+    COMPILATION_FILES = config.get("COMPILATION_FILES")
 
     result = {}
 
@@ -65,7 +65,7 @@ def test_single_submission(filename, config):
 
     # Determining the compilation string
     compilation_string = generate_compilation_string(
-        f"./{filename}", FILES_TO_COMPILE
+        f"./{filename}", COMPILATION_FILES
     )
 
     # Compiling the file
@@ -115,9 +115,9 @@ def test_single_submission(filename, config):
     return result
 
 
-def generate_compilation_string(relative_path, files_to_compile):
+def generate_compilation_string(relative_path, compilation_files):
     compilation_string = "gcc -Wall -Werror -std=c99"
-    for file in files_to_compile:
+    for file in compilation_files:
         compilation_string += f" {relative_path}/{file}"
     compilation_string += f" -o {relative_path}/program.out"
     return compilation_string

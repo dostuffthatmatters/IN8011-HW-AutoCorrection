@@ -1,7 +1,7 @@
 
 from time import sleep
-from app.utilities.custom_printing import CustomPrinting
-from app.utilities.custom_markdown import CustomMarkdown
+from src.utilities.custom_printing import CustomPrinting
+from src.utilities.custom_markdown import CustomMarkdown
 
 
 def print_report(results):

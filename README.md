@@ -1,98 +1,69 @@
-# AutoCorrector for Engineering Informatics 1
-
-Inside your desired `python3.7` environment run:
-
-```bash
-pip install poetry
-poetry install
-```
-
-Run the tests with:
-
-```bash
-python3.7 __init__.py
-```
-
-<br/>
+# IN8011 - Homework AutoCorrection
 
 ### File Structure
 
-Inside the directory **`Helpers`** you can find Helper Library which are not specifically part of this usecase.
+Inside **`configs/`** you can find all configs for each homework.
 
-Inside **`Example_for_HW1`** you can find an example for how the console- and the markdown-output might look like in homework 01.
+Inside **`HW01/`** you can find an example for how the submission files have to be pasted in. These `*_assignsubmission_file_` files are the files you will get from moodle.
 
-Inside **`HW1`** you can find the actual submission files used to demonstrate this tool.
-
-Inside **`Testing`** you can find the actual testing-procedure.
-
-<br/>
-
-### Setup
-
-Inside **`config.py`** you can set the homeworks requirements (which files do they need to submit, which files do we give them, e.g. `main.c`?).
-
-You have two specific two directories inside `config.py`:
-
--   **`GIVEN_DIRECTORY`**: Inside here you put all the files that have been provided for this homework -> The ones they didn't have to write by themselves, e.g. the testing `main`-file
--   **`SUBMISSION_DIRECTORY`**: Inside here you put each submittees folder that you've downloaded from moodle -> In here are all the `…_assignsubmission_file_`-folders
-
-You also have to list:
-
--   **`GIVEN_FILES`**: Which files did we provide?
--   **`SUBMISSION_FILES`**: Which files have to be in the submission files (more files are allowed)
-
-Lastly you have to specify which files need to be compiled in `FILES_TO_COMPILE`.
+Inside **`examples/`** you can find an example for how the console- and the markdown-output might look like in homework 01.
 
 <br/>
 
 ### Usage
 
-Copy all files into the folders `HW.../given` and `HW.../submission` (See the example for HW1 for that).
-Inside `Testing/__init__.py` specify which `config_....py` to use.
+1. Inside your desired `python3.7` environment run:
 
-Once you’ve set up the configuration you can run the file `AutoCorrection.__init__.py`.
+    ```bash
+    pip install poetry
+    poetry install
+    ```
 
-The test protocol will be generated at the location you’ve specified in `PROTOCOL_LOCATION`.
+2. Paste the submission you downloaded from moodle into `HW*/submissions`
 
-Example configuration for HW01:
+3. Paste the given files into `HW*/given`
+
+4. Select the correct config in `run.py`
+
+5. Test all homework submissions with
+
+    ```bash
+    python3.7 run.py
+    ```
+
+6. Check the report at `reports/results_HW*.md`
+
+<br/>
+
+### Implementation - Configuration
+
+Example configuration (from homework 06):
 
 ```python
 config = {
+    "HW_NUMBER": 6,
 
-    # Inside here you put all the files that have been provided for
-    # this homework -> The ones they didn't have to write by themselves,
-    # e.g. the testing "main"-file
-    "GIVEN_DIRECTORY": "HW01/given",
-
-    # Inside here you put each submittees folder that you've downloaded
-    # from moodle -> In here are all the "..._assignsubmission_file_"-folders
-    "SUBMISSION_DIRECTORY": "HW01/submission",
-
-    # The file that we provided them with
-    "GIVEN_FILES": ["main_partial_correction.c"],
+    # The file that the students were provided with
+    "GIVEN_FILES": ["swap.h", "main_swap_correction.c"],
 
     # The files that are required to be in the submitted zip-file
-    "SUBMISSION_FILES": ["partial_sum.c"],
+    "SUBMISSION_FILES": ["swap.c"],
 
-    # These are alle the files that should be compiled and linked together
-    # May not be equal to SUBMISSION_FILES + HOMEWORK_FILES
-    "FILES_TO_COMPILE": ["main_partial_correction.c"],
-
-    # Where should the resulting markdown file be put
-    "PROTOCOL_LOCATION": "testing_protocol_hw01.md"
-
+    # These are alle the files that should be compiled and linked together.
+    # May not be equal to GIVEN_FILES + SUBMISSION_FILES. However all files
+    # from GIVEN_FILES + SUBMISSION_FILES will be present in the directory
+    # where the compilation takes place
+    "COMPILATION_FILES": ["main_swap_correction.c", "swap.c"]
 }
 ```
 
 <br/>
 
-### Testing Procedure
+### Implementation - Testing Procedure
 
-I store all results in a python dictionary - similar to a hash table.
+The basic testing procedure:
 
-Roughly the testing procedure:
-
-1. Renaming all folders
+1. Creating temporary test directories for each submission
 2. Test 1: Is there exactly one zip-file?
 3. Test 2: Does the zip-file contain all the required files?
 4. Test 3: Does Compilation work as expected?
@@ -103,4 +74,4 @@ Roughly the testing procedure:
 
 Only a short version of the test protocol will be printed out to the console. Example for HW1:
 
-![](Example_for_HW01/terminal_output.png)
+![](examples/terminal_output.png)

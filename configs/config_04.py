@@ -12,5 +12,5 @@ config = {
     # May not be equal to GIVEN_FILES + SUBMISSION_FILES. However all files
     # from GIVEN_FILES + SUBMISSION_FILES will be present in the directory
     # where the compilation takes place
-    "FILES_TO_COMPILE": ["main_matrix_correction.c"]
+    "COMPILATION_FILES": ["main_matrix_correction.c"]
 }

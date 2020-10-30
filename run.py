@@ -1,5 +1,5 @@
 
-from app.main import test_all_submissions
+from src.main import test_all_submissions
 from configs.config_01 import config
 
 if __name__ == "__main__":
