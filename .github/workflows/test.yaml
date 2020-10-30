@@ -1,0 +1,21 @@
+name: Test
+
+on:
+    push:
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - uses: actions/checkout@v2
+            - name: Set up Python 3.7
+              uses: actions/setup-python@v2
+              with:
+                  python-version: 3.7
+            - name: Install poetry
+              uses: dschep/install-poetry-action@v1.3
+            - name: Install Python Dependencies
+              run: poetry install
+            - name: Test with pytest
+              run: poetry run pytest --cov=src --cov-report=term-missing --cov-report=xml tests
