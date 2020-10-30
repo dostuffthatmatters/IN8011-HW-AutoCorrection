@@ -6,11 +6,9 @@ import subprocess
 from tqdm import tqdm
 import time
 
-from Helpers.custom_printing import CustomPrinting
-from Helpers.custom_markdown import CustomMarkdown
-
-from config_01 import GIVEN_DIRECTORY, SUBMISSION_DIRECTORY, GIVEN_FILES, SUBMISSION_FILES, FILES_TO_COMPILE, PROTOCOL_LOCATION
-
+from app.utilities.custom_printing import CustomPrinting
+from app.utilities.custom_markdown import CustomMarkdown
+from app.utilities.validation import validate_config_format
 
 
 def remove_path(path):
@@ -22,33 +20,49 @@ def remove_path(path):
         shutil.rmtree(path)
 
 
-def clear_submission_directory():
-    for file_in_submission_directory in tqdm(list(filter(lambda x: os.path.isdir(f"{SUBMISSION_DIRECTORY}/{x}"), os.listdir(SUBMISSION_DIRECTORY)))):
-        if os.path.isdir(f"{SUBMISSION_DIRECTORY}/{file_in_submission_directory}"):
-            for file_to_remove in os.listdir(f"{SUBMISSION_DIRECTORY}/{file_in_submission_directory}"):
+def clear_submission_directory(directory):
+    for file_in_submission_directory in \
+            tqdm(list(filter(
+                lambda x: os.path.isdir(f"{directory}/{x}"),
+                os.listdir(directory))
+            )):
+        if os.path.isdir(f"{directory}/{file_in_submission_directory}"):
+            for file_to_remove in os.listdir(f"{directory}/{file_in_submission_directory}"):
                 if file_to_remove[-4:] != ".zip":
-                    remove_path(f"{SUBMISSION_DIRECTORY}/{file_in_submission_directory}/{file_to_remove}")
+                    remove_path(
+                        f"{directory}/{file_in_submission_directory}/{file_to_remove}")
         else:
-            remove_path(f"{SUBMISSION_DIRECTORY}/{file_in_submission_directory}")
+            remove_path(
+                f"{directory}/{file_in_submission_directory}")
 
 
+def run_homework_tests(config):
 
-def test_homework():
+    validate_config_format(config)
+
+    HW_NUMBER = config.get("HW_NUMBER")
+    HW_NUMBER_STR = f"HW{'0' if HW_NUMBER < 10 else ''}{HW_NUMBER}"
+    GIVEN_DIRECTORY = f"{HW_NUMBER_STR}/given"
+    SUBMISSION_DIRECTORY = f"{HW_NUMBER_STR}/submission"
+    PROTOCOL_LOCATION = f"test_protocol_{HW_NUMBER_STR}.md"
+
+    GIVEN_FILES = config.get("GIVEN_FILES")
+    SUBMISSION_FILES = config.get("SUBMISSION_FILES")
+    FILES_TO_COMPILE = config.get("FILES_TO_COMPILE")
 
     results = {}
     markdown_object = CustomMarkdown(PROTOCOL_LOCATION)
     markdown_object.write_h2("Testing all submissions for Homework 01")
-    markdown_object.write_text(text=f"{len(os.listdir(SUBMISSION_DIRECTORY))} submissions have been tested.", bold=True, new_lines=1)
-
-
+    markdown_object.write_text(
+        text=f"{len(os.listdir(SUBMISSION_DIRECTORY))} submissions have been tested.", bold=True, new_lines=1
+    )
 
     # I wait a short amount of time so that the print statement won't get mixed up
     time.sleep(0.05)
     print("\nRemoving all unwanted files and directories inside the submission folder")
     time.sleep(0.05)
-    clear_submission_directory()  # Removing all files except for the zip-file
-
-
+    # Removing all files except for the zip-file
+    clear_submission_directory(SUBMISSION_DIRECTORY)
 
     # I wait a short amount of time so that the print statement won't get mixed up
     time.sleep(0.05)
@@ -77,11 +91,10 @@ def test_homework():
         # Rename the folder to something more readable
         old_file_path = SUBMISSION_DIRECTORY + "/" + file
         name = file.replace("_assignsubmission_file_", "")[:-8]
-        new_file_path = SUBMISSION_DIRECTORY + "/" + "Submission_" + name.replace(" ", "_")
+        new_file_path = SUBMISSION_DIRECTORY + "/" + \
+            "Submission_" + name.replace(" ", "_")
         os.rename(old_file_path, new_file_path)
         results[name] = {}
-
-
 
     # I wait a short amount of time so that the print statement won't get mixed up
     time.sleep(0.05)
@@ -116,7 +129,8 @@ def test_homework():
         # If the contents of the folder do not match the requirements, which are:
         # Each students directory now has the zip-file in it and
         actual_files = os.listdir(student_path)
-        desired_files = directory_content + SUBMISSION_FILES  # directory_content is just the zip-file from before
+        # directory_content is just the zip-file from before
+        desired_files = directory_content + SUBMISSION_FILES
 
         wrong_files_submitted = False
 
@@ -141,11 +155,13 @@ def test_homework():
         # Determining the compilation string
         compilation_string = "gcc -Wall -Werror -std=c99"
         for file_to_compile in FILES_TO_COMPILE:
-            compilation_string += " " + f"{SUBMISSION_DIRECTORY}/{file}/{file_to_compile}"
+            compilation_string += " " + \
+                f"{SUBMISSION_DIRECTORY}/{file}/{file_to_compile}"
         compilation_string += f" -o {SUBMISSION_DIRECTORY}/{file}/program.out"
 
         # Compiling the file
-        process = subprocess.Popen(compilation_string, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        process = subprocess.Popen(
+            compilation_string, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         output, error_message = process.communicate()
         exit_code = process.returncode
 
@@ -166,7 +182,8 @@ def test_homework():
         execution_string = f"./{SUBMISSION_DIRECTORY}/{file}/program.out"
 
         # Executing the file
-        process = subprocess.Popen(execution_string, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
+        process = subprocess.Popen(
+            execution_string, shell=True, stderr=subprocess.PIPE, stdout=subprocess.PIPE)
         output, error_message = process.communicate()
         exit_code = process.returncode
 
@@ -181,15 +198,12 @@ def test_homework():
 
         # -------------------------------------------------------------------------------------------------------------
 
-
-
     # I wait a short amount of time so that the print statement won't get mixed up
     time.sleep(0.05)
     print("\nRemoving all created files and directories")
     time.sleep(0.05)
-    clear_submission_directory()  # Removing all files except for the zip-file
-
-
+    # Removing all files except for the zip-file
+    clear_submission_directory(SUBMISSION_DIRECTORY)
 
     # Generating the test protocol as a markdown file
     time.sleep(0.05)
@@ -198,23 +212,28 @@ def test_homework():
 
         if results[name]["result"] == "Failed":
             markdown_object.write_h4(f"{name} -> Failed:", color=(255, 0, 0))
-            markdown_object.write_codeblock(code=f"{results[name]['message']}", language="bash")
+            markdown_object.write_codeblock(
+                code=f"{results[name]['message']}", language="bash")
             if "input" in results[name]:
                 for input_file in results[name]["input"]:
-                    markdown_object.write_text(f"Input File `{input_file}`:", bold=True)
-                    markdown_object.write_codeblock(code=results[name]["input"][input_file], language="c", new_lines=0)
+                    markdown_object.write_text(
+                        f"Input File `{input_file}`:", bold=True)
+                    markdown_object.write_codeblock(
+                        code=results[name]["input"][input_file], language="c", new_lines=0)
         else:
-            markdown_object.write_h4(f"{name} -> Successful until execution:", color=(0, 200, 0))
+            markdown_object.write_h4(
+                f"{name} -> Successful until execution:", color=(0, 200, 0))
             markdown_object.write_text(f"Output Stream:", bold=True)
-            markdown_object.write_codeblock(code=results[name]["output"], language="bash")
+            markdown_object.write_codeblock(
+                code=results[name]["output"], language="bash")
 
             for input_file in results[name]["input"]:
-                markdown_object.write_text(f"Input File `{input_file}`:", bold=True)
-                markdown_object.write_codeblock(code=results[name]["input"][input_file], language="c", new_lines=0)
+                markdown_object.write_text(
+                    f"Input File `{input_file}`:", bold=True)
+                markdown_object.write_codeblock(
+                    code=results[name]["input"][input_file], language="c", new_lines=0)
 
     markdown_object.write_horizontal_line()
-
-
 
     # Print out a short version of the test protocol
     time.sleep(0.05)
@@ -224,11 +243,11 @@ def test_homework():
             CustomPrinting.print_red(f"{name} -> Failed:", bold=True)
             CustomPrinting.print_red(f"{results[name]['message']}")
         else:
-            CustomPrinting.print_green(f"{name} -> Successful until execution:", bold=True)
+            CustomPrinting.print_green(
+                f"{name} -> Successful until execution:", bold=True)
             CustomPrinting.print_green(f"\nOutput Stream:", bold=True)
             CustomPrinting.print_green("-" * 60)
             CustomPrinting.print_green(results[name]["output"])
             CustomPrinting.print_green("-" * 60)
 
     CustomPrinting.print("\n" * 2 + "#" * 120 + "\n" * 2, bold=True)
-
