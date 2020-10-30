@@ -7,19 +7,23 @@ from src.utilities.custom_markdown import CustomMarkdown
 def print_report(results):
     sleep(0.05)
     for name in sorted(results.keys()):
-        CustomPrinting.print("\n" * 2 + "#" * 120 + "\n" * 2, bold=True)
+        CustomPrinting.print_line(bold=True, character='-', new_lines=2)
         if results[name]["result"] == "Failed":
-            CustomPrinting.print_red(f"{name} -> Failed:", bold=True)
-            CustomPrinting.print_red(f"{results[name]['message']}")
+            CustomPrinting.print(f"{name} -> Failed:", color='red', bold=True)
+            CustomPrinting.print_line(character='.')
+            CustomPrinting.print(f"{results[name]['message']}")
+            CustomPrinting.print_line(character='.', new_lines=2)
         else:
-            CustomPrinting.print_green(
-                f"{name} -> Successful until execution:", bold=True)
-            CustomPrinting.print_green(f"\nOutput Stream:", bold=True)
-            CustomPrinting.print_green("-" * 60)
-            CustomPrinting.print_green(results[name]["output"])
-            CustomPrinting.print_green("-" * 60)
+            CustomPrinting.print(
+                f"{name} -> Successful until execution:",
+                color='green', bold=True
+            )
+            CustomPrinting.print(f"\nOutput Stream:", bold=True)
+            CustomPrinting.print_line(character='.')
+            CustomPrinting.print(results[name]["output"])
+            CustomPrinting.print_line(character='.', new_lines=2)
 
-    CustomPrinting.print("\n" * 2 + "#" * 120 + "\n" * 2, bold=True)
+    CustomPrinting.print_line(bold=True, character='-')
 
 
 def generate_md_report(results, hw_number):

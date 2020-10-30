@@ -80,6 +80,8 @@ def test_single_submission(filename, config):
     if process.returncode != 0:
         result["result"] = "Failed"
         result["message"] = f"Did not compile: {message.decode()}"
+        while result["message"].endswith('\n'):
+            result["message"] = result["message"][:-1]
         result["input"] = {}
 
         for file in SUBMISSION_FILES:
@@ -105,6 +107,8 @@ def test_single_submission(filename, config):
     result["result"] = "Success"
     result["exit_code"] = exit_code
     result["output"] = output.decode("utf-8", "replace")
+    while result["output"].endswith('\n'):
+        result["output"] = result["output"][:-1]
     result["input"] = {}
 
     for file in SUBMISSION_FILES:

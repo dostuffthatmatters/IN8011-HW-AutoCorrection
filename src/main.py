@@ -12,8 +12,9 @@ from src.utilities.testing import test_single_submission
 
 def log(step_no, text):
     sleep(0.05)
-    CustomPrinting.print_yellow(
-        f"Step {step_no}: {text}", bold=True,
+    CustomPrinting.print(
+        f"Step {step_no}: {text}",
+        color='yellow', bold=True,
     )
     sleep(0.05)
 

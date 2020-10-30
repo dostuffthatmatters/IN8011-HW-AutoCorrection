@@ -1,156 +1,79 @@
 import json
+import shutil
 
 
 class CustomPrinting(object):
     """
-    Singleton Class
-
     This is an abstract class for advanced print statements (in color, bold, underlined)
 
-    Usage:
-    print(text) --> CustomPrinting.print_ok_blue(text)
-
-    Suppress new line with:
-    CustomPrinting.print_ok_blue(text, new_line=False)
+    Example Usage:
+    CustomPrinting.print(text, color='blue', new_lines=0, bold=True)
 
     Available methods:
     print
-    print_ok_blue
-    print_ok_green
-    print_ok_warning
-    print_ok_fail
-    print_ok_header
-    print_ok_bold
-    print_ok_underline
+    print_line
+    print_dict
     """
 
-    ENDC = '\033[0m'
-
-    OKBLUE = '\033[94m'
-    OKGREEN = '\033[92m'
-    WARNING = '\033[93m'
-    FAIL = '\033[91m'
-
-    HEADER = '\033[95m'
     BOLD = '\033[1m'
     UNDERLINE = '\033[4m'
+    ENDC = '\033[0m'
+
+    # replacement for a switch statement
+    color_functions = {
+        'green': lambda text: f"\033[92m{text}\033[0m",
+        'yellow': lambda text: f"\033[93m{text}\033[0m",
+        'red': lambda text: f"\033[91m{text}\033[0m",
+        'pink': lambda text: f"\033[95m{text}\033[0m",
+        'blue': lambda text: f"\033[94m{text}\033[0m"
+    }
 
     @staticmethod
-    def print(text, new_lines=1, bold=False, underline=False):
+    def print(text, color='default', new_lines=1, bold=False, underline=False):
+
+        assert(color in ['default', 'green', 'yellow', 'red', 'pink', 'blue'])
+        if color != 'default':
+            text = CustomPrinting.color_functions[color](text)
+
         if bold:
-            text = CustomPrinting.get_string_bold(text)
+            text = CustomPrinting.get_bold_text(text)
         if underline:
-            text = CustomPrinting.get_string_underline(text)
+            text = CustomPrinting.get_underlined_text(text)
 
         print(str(text), end=("\n"*new_lines if new_lines > 0 else ""))
 
     @staticmethod
-    def print_blue(text, new_lines=1, bold=False, underline=False):
-        begin = CustomPrinting.OKBLUE
-        end = CustomPrinting.ENDC
-
+    def print_line(character='-', color='default', new_lines=1, bold=False):
+        assert(len(character) == 1)
+        text = character * shutil.get_terminal_size().columns
+        assert(color in ['default', 'green', 'yellow', 'red', 'pink', 'blue'])
+        if color != 'default':
+            text = CustomPrinting.color_functions[color](text)
         if bold:
-            text = CustomPrinting.get_string_bold(text)
-        if underline:
-            text = CustomPrinting.get_string_underline(text)
-
-        print(begin + str(text) + end, end=("\n"*new_lines if new_lines > 0 else ""))
-
-    @staticmethod
-    def print_green(text, new_lines=1, bold=False, underline=False):
-        begin = CustomPrinting.OKGREEN
-        end = CustomPrinting.ENDC
-
-        if bold:
-            text = CustomPrinting.get_string_bold(text)
-        if underline:
-            text = CustomPrinting.get_string_underline(text)
-
-        print(begin + str(text) + end, end=("\n"*new_lines if new_lines > 0 else ""))
-
-    @staticmethod
-    def print_yellow(text, new_lines=1, bold=False, underline=False):
-        begin = CustomPrinting.WARNING
-        end = CustomPrinting.ENDC
-
-        if bold:
-            text = CustomPrinting.get_string_bold(text)
-        if underline:
-            text = CustomPrinting.get_string_underline(text)
-
-        print(begin + str(text) + end, end=("\n"*new_lines if new_lines > 0 else ""))
-
-    @staticmethod
-    def print_red(text, new_lines=1, bold=False, underline=False):
-        begin = CustomPrinting.FAIL
-        end = CustomPrinting.ENDC
-
-        if bold:
-            text = CustomPrinting.get_string_bold(text)
-        if underline:
-            text = CustomPrinting.get_string_underline(text)
-
-        print(begin + str(text) + end, end=("\n"*new_lines if new_lines > 0 else ""))
-
-    @staticmethod
-    def print_pink(text, new_lines=1, bold=False, underline=False):
-        begin = CustomPrinting.HEADER
-        end = CustomPrinting.ENDC
-
-        if bold:
-            text = CustomPrinting.get_string_bold(text)
-        if underline:
-            text = CustomPrinting.get_string_underline(text)
-
-        print(begin + str(text) + end, end=("\n"*new_lines if new_lines > 0 else ""))
+            text = CustomPrinting.get_bold_text(text)
+        print(str(text), end=("\n"*new_lines if new_lines > 0 else ""))
 
     @staticmethod
     def print_dict(dictionary):
         print(json.dumps(dictionary, indent=4))
 
     @staticmethod
-    def get_string_bold(text):
+    def get_bold_text(text):
         return CustomPrinting.BOLD + str(text) + CustomPrinting.ENDC
 
     @staticmethod
-    def get_string_underline(text):
+    def get_underlined_text(text):
         return CustomPrinting.UNDERLINE + str(text) + CustomPrinting.ENDC
 
 
 if __name__ == "__main__":
+    CustomPrinting.print_line(new_lines=2)
 
-    print("")
-
-    CustomPrinting.print("This is a test print (white)")
-    CustomPrinting.print("This is a test print (white, bold)", bold=True)
-    CustomPrinting.print("This is a test print (white, bold, underlined)", bold=True, underline=True)
-
-    print("")
-
-    CustomPrinting.print_green("This is a test print (green)")
-    CustomPrinting.print_green("This is a test print (green, bold)", bold=True)
-    CustomPrinting.print_green("This is a test print (green, bold, underlined)", bold=True, underline=True)
-
-    print("")
-
-    CustomPrinting.print_blue("This is a test print (blue)")
-    CustomPrinting.print_blue("This is a test print (blue, bold)", bold=True)
-    CustomPrinting.print_blue("This is a test print (blue, bold, underlined)", bold=True, underline=True)
-
-    print("")
-
-    CustomPrinting.print_yellow("This is a test print (yellow)")
-    CustomPrinting.print_yellow("This is a test print (yellow, bold)", bold=True)
-    CustomPrinting.print_yellow("This is a test print (yellow, bold, underlined)", bold=True, underline=True)
-
-    print("")
-
-    CustomPrinting.print_red("This is a test print (red)")
-    CustomPrinting.print_red("This is a test print (red, bold)", bold=True)
-    CustomPrinting.print_red("This is a test print (red, bold, underlined)", bold=True, underline=True)
-
-    print("")
-
-    CustomPrinting.print_pink("This is a test print (pink)")
-    CustomPrinting.print_pink("This is a test print (pink, bold)", bold=True)
-    CustomPrinting.print_pink("This is a test print (pink, bold, underlined)", bold=True, underline=True)
+    for color in ['default', 'green', 'yellow', 'red', 'pink', 'blue']:
+        for bold in [False, True]:
+            for underline in [False, True]:
+                CustomPrinting.print(
+                    f"print(color='{color}', bold='{bold}', underlime='{underline}')",
+                    color=color, bold=bold, underline=underline, new_lines=2
+                )
+        CustomPrinting.print_line(new_lines=2)
