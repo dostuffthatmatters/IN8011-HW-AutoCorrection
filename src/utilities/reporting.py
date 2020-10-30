@@ -30,8 +30,10 @@ def generate_md_report(results, hw_number):
     location = f"reports/results_HW{'0' if hw_number < 10 else ''}{hw_number}.md"
     markdown_object = CustomMarkdown(location)
 
-    markdown_object.write_h2(
-        f"Testing all submissions for Homework {hw_number}")
+    markdown_object.write_heading(
+        f"Testing all submissions for Homework {hw_number}",
+        heading_type='h2'
+    )
     markdown_object.write_text(
         text=f"{len(results)} submissions have been tested.",
         bold=True, new_lines=1
@@ -41,7 +43,10 @@ def generate_md_report(results, hw_number):
         markdown_object.write_horizontal_line()
 
         if results[name]["result"] == "Failed":
-            markdown_object.write_h4(f"{name} -> Failed:", color=(255, 0, 0))
+            markdown_object.write_heading(
+                f"{name} -> Failed:", color=(255, 0, 0),
+                heading_type='h4'
+            )
             markdown_object.write_codeblock(
                 code=f"{results[name]['message']}", language="bash"
             )
@@ -52,8 +57,10 @@ def generate_md_report(results, hw_number):
                     markdown_object.write_codeblock(
                         code=results[name]["input"][input_file], language="c", new_lines=0)
         else:
-            markdown_object.write_h4(
-                f"{name} -> Successful until execution:", color=(0, 200, 0))
+            markdown_object.write_heading(
+                f"{name} -> Successful until execution:", color=(0, 200, 0),
+                heading_type='h4'
+            )
             markdown_object.write_text(f"Output Stream:", bold=True)
             markdown_object.write_codeblock(
                 code=results[name]["output"], language="bash")

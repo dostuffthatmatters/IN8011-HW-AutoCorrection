@@ -19,15 +19,6 @@ def log(step_no, text):
     sleep(0.05)
 
 
-def remove_path(path):
-    try:
-        # If the path is a file or an empty directory
-        os.remove(path)
-    except PermissionError:
-        # Otherwise
-        shutil.rmtree(path)
-
-
 def clear_submission_directory(directory):
     # The format in which moodle provides the submitted files
     for filename in tqdm(list(filter(
