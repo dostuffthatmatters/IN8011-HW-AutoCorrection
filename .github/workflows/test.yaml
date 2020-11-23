@@ -15,6 +15,8 @@ jobs:
                   python-version: 3.7
             - name: Install poetry
               uses: dschep/install-poetry-action@v1.3
+              env:
+                  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
             - name: Install Python Dependencies
               run: poetry install
             - name: Test with pytest
