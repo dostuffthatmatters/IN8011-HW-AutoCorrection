@@ -25,7 +25,13 @@ def clear_submission_directory(directory):
         lambda file: not file.endswith("_assignsubmission_file_"),
         os.listdir(directory)
     ))):
-        shutil.rmtree(f"{directory}/{filename}")
+        try:
+            shutil.rmtree(f"{directory}/{filename}")
+        except:
+            try:
+                os.remove(f"{directory}/{filename}")
+            except:
+                print("Don't know what is happening")
 
 
 def run_all_submission_tests(config, print_results=True):
