@@ -93,4 +93,4 @@ def prepare_test_directories():
         else:
             os.remove(f"./{filename}")
 
-    return filenames
+    return list(sorted(filenames))

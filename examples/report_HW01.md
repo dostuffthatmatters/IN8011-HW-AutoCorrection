@@ -1,6 +1,6 @@
 ## Testing all submissions for Homework 1
 
-**4 submissions have been tested.**
+**6 submissions have been tested.**
 
 
 
@@ -215,7 +215,6 @@ Did not compile: In file included from ./max-mustermann03/main_partial_correctio
     while (i < = n);
                ^
 1 error generated.
-
 ```
 
 
@@ -306,6 +305,38 @@ int calc_n(double h){
 
 ```bash
 Wrong files in zip-file: Desired: ['HW1_Mustermann04_Max.zip', 'partial_sum.c'], Actual: ['New folder', '__MACOSX', 'HW1_Mustermann04_Max.zip']
+```
+
+
+
+
+
+---
+
+
+
+
+#### <span style='color: rgb(255, 0, 0)'>max-mustermann05 -> Failed:</span>
+
+
+```bash
+Too many zip-files in directory: {directory_content}
+```
+
+
+
+
+
+---
+
+
+
+
+#### <span style='color: rgb(255, 0, 0)'>max-mustermann06 -> Failed:</span>
+
+
+```bash
+Too many zip-files in directory: {directory_content}
 ```
 
 
