@@ -19,7 +19,7 @@ def run_single_submission_test(filename, config):
     if len(directory_content) > 1:
         result["result"] = "Failed"
         result["message"] = f"Too many zip-files in directory: " + \
-            "{directory_content}"
+            f"{directory_content}"
         return result  # Jump to next attendee
 
     # *********************************************************************
@@ -112,9 +112,22 @@ def run_single_submission_test(filename, config):
     result["input"] = {}
 
     for file in SUBMISSION_FILES:
-        result["input"][file] = open(
-            f"./{filename}/{file}", 'r'
-        ).read()
+        def read(enc):
+            return open(
+                f"./{filename}/{file}", 'r',
+                encoding=enc
+            ).read()
+
+        try:
+            result["input"][file] = read('utf-8')
+        except:
+            try:
+                result["input"][file] = read('utf-16')
+            except:
+                try:
+                    result["input"][file] = read('iso-8859-15')
+                except:
+                    result["input"][file] = "Really weird file encoding ... Please look at the file directly!"
 
     return result
 
