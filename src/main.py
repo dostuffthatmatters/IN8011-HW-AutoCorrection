@@ -4,7 +4,7 @@ import shutil
 from tqdm import tqdm
 from time import sleep
 
-from src.utilities.custom_printing import CustomPrinting
+from src.utilities.custom_printer import CustomPrinter
 from src.utilities.validation import validate_config_format, validate_file_system
 from src.utilities.reporting import generate_md_report, print_report
 from src.utilities.testing import run_single_submission_test
@@ -12,7 +12,7 @@ from src.utilities.testing import run_single_submission_test
 
 def log(step_no, text):
     sleep(0.05)
-    CustomPrinting.print(
+    CustomPrinter.print(
         f"Step {step_no}: {text}",
         color='yellow', bold=True,
     )
