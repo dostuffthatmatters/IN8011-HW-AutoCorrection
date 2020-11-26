@@ -14,6 +14,6 @@ def test_custom_printing():
     cp.print_line(color='red')
     cp.print_line(bold=True)
 
-    cp.print_dict(
+    cp.print(
         {"param1": True, "param2": {"1": 1, "param3": [True, "now"]}}
     )

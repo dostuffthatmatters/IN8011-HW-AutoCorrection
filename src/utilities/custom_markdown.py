@@ -2,8 +2,8 @@ import os
 import shutil
 
 """
-I don't know why but somehow you crazy many new_line characters
-so that they show any effect inside the markdown file...
+I don't know why but sometimes you need a lot of new_line characters
+so that they show any effect inside the markdown preview ...
 """
 
 

@@ -5,92 +5,92 @@ from tqdm import tqdm
 from time import sleep
 
 from src.utilities.custom_printer import CustomPrinter
-from src.utilities.validation import validate_config_format, validate_file_system
-from src.utilities.reporting import generate_md_report, print_report
-from src.utilities.testing import run_single_submission_test
+from src.utilities.validator import Validator
+from src.utilities.reporting import Reporting
+from src.utilities.testing import Testing
 
 
-def log(step_no, text):
-    sleep(0.05)
-    CustomPrinter.print(
-        f"Step {step_no}: {text}",
-        color='yellow', bold=True,
-    )
-    sleep(0.05)
+class Main:
 
+    @staticmethod
+    def run(config, print_results=True):
 
-def clear_submission_directory(directory):
-    # The format in which moodle provides the submitted files
-    for filename in tqdm(list(filter(
-        lambda file: not file.endswith("_assignsubmission_file_"),
-        os.listdir(directory)
-    ))):
-        try:
-            shutil.rmtree(f"{directory}/{filename}")
-        except:
-            try:
-                os.remove(f"{directory}/{filename}")
-            except:
-                print("Don't know what is happening")
+        Validator.config(config)
+        Validator.file_system(config)
 
+        os.chdir(f"HW{str(config.get('HW_NUMBER')).zfill(2)}/submissions")
 
-def run_all_submission_tests(config, print_results=True):
+        # *************************************************************************
+        Main._log(1, "Removing all unwanted files from the submission directory")
+        Main._clear_submission_directory('.')
 
-    validate_config_format(config)
-    validate_file_system(config)
+        # *************************************************************************
+        Main._log(2, "Preparing temporary test directories")
+        filenames = Main._prepare_test_directories()
 
-    os.chdir(f"HW{str(config.get('HW_NUMBER')).zfill(2)}/submissions")
+        # *************************************************************************
+        Main._log(3, "Testing each submission")
 
-    # *************************************************************************
-    log(1, "Removing all unwanted files from the submission directory")
-    clear_submission_directory('.')
+        results = {}
+        for filename in tqdm(filenames):
+            results[filename] = Testing.run(filename, config)
 
-    # *************************************************************************
-    log(2, "Preparing temporary test directories")
-    filenames = prepare_test_directories()
+        # *************************************************************************
+        Main._log(4, "Removing test directories")
+        Main._clear_submission_directory('.')
+        os.chdir("../../")
 
-    # *************************************************************************
-    log(3, "Testing each submission")
-
-    results = {}
-    for filename in tqdm(filenames):
-        results[filename] = run_single_submission_test(
-            filename, config
+        # *************************************************************************
+        Main._log(5, "Generating full report in markdown")
+        Reporting.generate_markdown(
+            results,
+            config.get('HW_NUMBER')
         )
 
-    # *************************************************************************
-    log(4, "Removing test directories")
-    clear_submission_directory('.')
-    os.chdir("../../")
+        # *************************************************************************
+        if print_results:
+            Main._log(6, "Printing short report to console")
+            Reporting.print(results)
 
-    # *************************************************************************
-    log(5, "Generating full report in markdown")
-    generate_md_report(
-        results,
-        config.get('HW_NUMBER')
-    )
+    @staticmethod
+    def _log(step_no, text):
+        sleep(0.05)
+        CustomPrinter.print(
+            f"Step {step_no}: {text}",
+            color='yellow', bold=True,
+        )
+        sleep(0.05)
 
-    if print_results:
-        # *********************************************************************
-        log(6, "Printing short report to console")
-        print_report(results)
+    @staticmethod
+    def _prepare_test_directories():
+        filenames = []
 
+        # Create renamed testing directories
+        for filename in tqdm(os.listdir('.')):
+            # The format in which moodle provides the submitted files
+            if filename.endswith("_assignsubmission_file_"):
+                new_filename = filename.split("_")[0].lower().replace(" ", "-")
+                shutil.copytree(
+                    f"./{filename}",
+                    f"./{new_filename}"
+                )
+                filenames.append(new_filename)
+            else:
+                os.remove(f"./{filename}")
 
-def prepare_test_directories():
-    assert(os.getcwd().endswith('/submissions'))
-    filenames = []
+        return list(sorted(filenames))
 
-    # Create renamed testing directories
-    for filename in tqdm(os.listdir('.')):
+    @staticmethod
+    def _clear_submission_directory(directory):
         # The format in which moodle provides the submitted files
-        if filename.endswith("_assignsubmission_file_"):
-            new_filename = filename.split("_")[0].lower().replace(" ", "-")
-            shutil.copytree(
-                f"./{filename}",
-                f"./{new_filename}"
-            )
-            filenames.append(new_filename)
-        else:
-            os.remove(f"./{filename}")
-
-    return list(sorted(filenames))
+        for filename in tqdm(list(filter(
+            lambda file: not file.endswith("_assignsubmission_file_"),
+            os.listdir(directory)
+        ))):
+            try:
+                shutil.rmtree(f"{directory}/{filename}")
+            except:
+                try:
+                    os.remove(f"{directory}/{filename}")
+                except:
+                    print("Don't know what is happening")

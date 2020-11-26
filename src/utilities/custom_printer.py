@@ -4,7 +4,8 @@ import shutil
 
 class CustomPrinter(object):
     """
-    This is an abstract class for advanced print statements (in color, bold, underlined)
+    This is an abstract class for advanced print statements
+    (in color, bold, underlined)
 
     Example Usage:
     CustomPrinting.print(text, color='blue', new_lines=0, bold=True)
@@ -31,14 +32,18 @@ class CustomPrinter(object):
     @staticmethod
     def print(text, color='default', new_lines=1, bold=False, underline=False):
 
+        if isinstance(text, dict):
+            CustomPrinter._print_dict(text)
+            return
+
         assert(color in ['default', 'green', 'yellow', 'red', 'pink', 'blue'])
         if color != 'default':
             text = CustomPrinter.color_functions[color](text)
 
         if bold:
-            text = CustomPrinter.get_bold_text(text)
+            text = CustomPrinter._get_bold_text(text)
         if underline:
-            text = CustomPrinter.get_underlined_text(text)
+            text = CustomPrinter._get_underlined_text(text)
 
         print(str(text), end=("\n"*new_lines if new_lines > 0 else ""))
 
@@ -50,17 +55,17 @@ class CustomPrinter(object):
         if color != 'default':
             text = CustomPrinter.color_functions[color](text)
         if bold:
-            text = CustomPrinter.get_bold_text(text)
+            text = CustomPrinter._get_bold_text(text)
         print(str(text), end=("\n"*new_lines if new_lines > 0 else ""))
 
     @staticmethod
-    def print_dict(dictionary):
+    def _print_dict(dictionary):
         print(json.dumps(dictionary, indent=4))
 
     @staticmethod
-    def get_bold_text(text):
+    def _get_bold_text(text):
         return CustomPrinter.BOLD + str(text) + CustomPrinter.ENDC
 
     @staticmethod
-    def get_underlined_text(text):
+    def _get_underlined_text(text):
         return CustomPrinter.UNDERLINE + str(text) + CustomPrinter.ENDC

@@ -1,6 +1,6 @@
 
 import os
-from src.main import run_all_submission_tests
+from src.main import Main
 from configs.config_01 import config
 
 
@@ -12,7 +12,7 @@ def test_example_homework():
 
     assert('reports' in os.listdir('.'))
 
-    run_all_submission_tests(config)
+    Main.run(config)
 
     assert('HW01' in os.listdir('.'))
     assert('given' in os.listdir('./HW01'))

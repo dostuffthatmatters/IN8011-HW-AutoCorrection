@@ -1,7 +1,7 @@
 
 import os
 import importlib
-from src.utilities.validation import validate_config_format
+from src.utilities.validator import Validator
 
 
 def test_configurations():
@@ -13,4 +13,4 @@ def test_configurations():
     for config in configs:
         print(f"IMPORTING {f'configs.{config[:-3]}'}")
         file = importlib.import_module(f"configs.{config[:-3]}")
-        validate_config_format(file.config)
+        Validator.config(file.config)
