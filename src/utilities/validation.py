@@ -20,3 +20,11 @@ def validate_config_format(config):
     assert(all([
         file in (SUBMISSION_FILES + GIVEN_FILES) for file in COMPILATION_FILES
     ]))
+
+
+def validate_file_system(config):
+    HW_DIRECTORY = f"HW{str(config.get('HW_NUMBER')).zfill(2)}"
+    assert(os.path.exists(f"{HW_DIRECTORY}/given"))
+    assert(os.path.exists(f"{HW_DIRECTORY}/submissions"))
+    for given_file in config["GIVEN_FILES"]:
+        assert(os.path.exists(f"{HW_DIRECTORY}/given/{given_file}"))

@@ -5,7 +5,7 @@ from tqdm import tqdm
 from time import sleep
 
 from src.utilities.custom_printing import CustomPrinting
-from src.utilities.validation import validate_config_format
+from src.utilities.validation import validate_config_format, validate_file_system
 from src.utilities.reporting import generate_md_report, print_report
 from src.utilities.testing import run_single_submission_test
 
@@ -37,11 +37,9 @@ def clear_submission_directory(directory):
 def run_all_submission_tests(config, print_results=True):
 
     validate_config_format(config)
+    validate_file_system(config)
 
-    HW_NUMBER = config.get("HW_NUMBER")
-    assert(os.path.exists(f"HW{str(HW_NUMBER).zfill(2)}/given"))
-    assert(os.path.exists(f"HW{str(HW_NUMBER).zfill(2)}/submissions"))
-    os.chdir(f"HW{str(HW_NUMBER).zfill(2)}/submissions")
+    os.chdir(f"HW{str(config.get('HW_NUMBER')).zfill(2)}/submissions")
 
     # *************************************************************************
     log(1, "Removing all unwanted files from the submission directory")
@@ -69,7 +67,7 @@ def run_all_submission_tests(config, print_results=True):
     log(5, "Generating full report in markdown")
     generate_md_report(
         results,
-        HW_NUMBER
+        config.get('HW_NUMBER')
     )
 
     if print_results:
