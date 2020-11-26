@@ -39,13 +39,9 @@ def run_all_submission_tests(config, print_results=True):
     validate_config_format(config)
 
     HW_NUMBER = config.get("HW_NUMBER")
-    assert(os.path.exists(
-        f"HW{'0' if HW_NUMBER < 10 else ''}{HW_NUMBER}/given")
-    )
-    assert(os.path.exists(
-        f"HW{'0' if HW_NUMBER < 10 else ''}{HW_NUMBER}/submissions")
-    )
-    os.chdir(f"HW{'0' if HW_NUMBER < 10 else ''}{HW_NUMBER}/submissions")
+    assert(os.path.exists(f"HW{str(HW_NUMBER).zfill(2)}/given"))
+    assert(os.path.exists(f"HW{str(HW_NUMBER).zfill(2)}/submissions"))
+    os.chdir(f"HW{str(HW_NUMBER).zfill(2)}/submissions")
 
     # *************************************************************************
     log(1, "Removing all unwanted files from the submission directory")
