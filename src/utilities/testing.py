@@ -23,7 +23,7 @@ class Testing:
         )
         if len(directory_content) > 1:
             result["result"] = "Failed"
-            result["message"] = f"Too many zip-files in directory: " + \
+            result["output"] = f"Too many zip-files in directory: " + \
                 f"{directory_content}"
             return result  # Jump to next attendee
 
@@ -53,7 +53,7 @@ class Testing:
             actual_files = list(
                 filter(lambda f: f != directory_content[0], actual_files))
             result["result"] = "Failed"
-            result["message"] = f"Wrong files in zip-file:" + \
+            result["output"] = f"Wrong files in zip-file:" + \
                 f" Desired: {desired_files}, Actual: {actual_files}"
             return result  # Jump to next attendee
 
@@ -87,10 +87,12 @@ class Testing:
         output, message = process.communicate()
 
         if process.returncode != 0:
+            output = f"Did not compile: {message.decode()}"
+            while output.endswith('\n'):
+                output = output[:-1]
+
             result["result"] = "Failed"
-            result["message"] = f"Did not compile: {message.decode()}"
-            while result["message"].endswith('\n'):
-                result["message"] = result["message"][:-1]
+            result["output"] = output
             result["input"] = {}
 
             for file in SUBMISSION_FILES:
