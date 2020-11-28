@@ -19,7 +19,8 @@ class Testing:
         # Test 1: Is there exactly one zip-file?
 
         directory_content = list(
-            filter(lambda x: x.endswith(".zip"), os.listdir(f"./{filename}")))
+            filter(lambda x: x.endswith(".zip"), os.listdir(f"./{filename}"))
+        )
         if len(directory_content) > 1:
             result["result"] = "Failed"
             result["message"] = f"Too many zip-files in directory: " + \
@@ -43,10 +44,14 @@ class Testing:
         desired_files = directory_content + SUBMISSION_FILES
 
         wrong_files_submitted = not all([
-            desired_file in actual_files for desired_file in desired_files
+            f in actual_files for f in desired_files
         ])
 
         if wrong_files_submitted:
+            desired_files = list(
+                filter(lambda f: f != directory_content[0], desired_files))
+            actual_files = list(
+                filter(lambda f: f != directory_content[0], actual_files))
             result["result"] = "Failed"
             result["message"] = f"Wrong files in zip-file:" + \
                 f" Desired: {desired_files}, Actual: {actual_files}"

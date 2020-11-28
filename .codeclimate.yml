@@ -1,0 +1,32 @@
+version: '2'
+
+checks:
+    argument-count:
+        config:
+            threshold: 6
+    complex-logic:
+        config:
+            threshold: 10
+    file-lines:
+        config:
+            threshold: 150
+    method-complexity:
+        config:
+            threshold: 10
+    method-count:
+        config:
+            threshold: 10
+    method-lines:
+        config:
+            threshold: 50
+    nested-control-flow:
+        config:
+            threshold: 6
+    return-statements:
+        config:
+            threshold: 4
+
+exclude_patterns:
+    - '/.idea'
+    - '/.*'
+    - '**/*.md'
