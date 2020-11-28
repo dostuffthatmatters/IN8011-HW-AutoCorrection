@@ -17,15 +17,15 @@ def test_reporting():
 
     assert(len(re.findall("6 submissions have been tested", report)) == 1)
 
-    assert(len(re.findall(".*Successful until execution:", report)) == 2)
-    assert(len(re.findall("<span style='color: rgb\(0, 200, 0\)'>.*", report)) == 2)
+    assert(len(re.findall(".*Successful until execution:", report)) == 3)
+    assert(len(re.findall("<span style='color: rgb\(0, 200, 0\)'>.*", report)) == 3)
 
-    assert(len(re.findall("Failed:", report)) == 4)
-    assert(len(re.findall("<span style='color: rgb\(255, 0, 0\)'>", report)) == 4)
+    assert(len(re.findall(".*Failed:", report)) == 3)
+    assert(len(re.findall("<span style='color: rgb\(255, 0, 0\)'>.*", report)) == 3)
 
-    assert(len(re.findall("(```c)([^`]+)(```)", report)) == 3), \
+    assert(len(re.findall("(```c)([^`]+)(```)", report)) == 4), \
         "Invalid report format (c blocks missing)"
-    assert(len(re.findall("(```c)([^`]{20,})(```)", report)) == 3), \
+    assert(len(re.findall("(```c)([^`]{20,})(```)", report)) == 4), \
         "File reading stream empty"
 
     assert(len(re.findall("(```bash)([^`]+)(```)", report)) == 6), \

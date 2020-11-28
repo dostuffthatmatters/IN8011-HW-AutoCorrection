@@ -18,7 +18,8 @@ class Testing:
         # *********************************************************************
         # Test 1: Is there exactly one zip-file?
 
-        directory_content = os.listdir(f"./{filename}")
+        directory_content = list(
+            filter(lambda x: x.endswith(".zip"), os.listdir(f"./{filename}")))
         if len(directory_content) > 1:
             result["result"] = "Failed"
             result["message"] = f"Too many zip-files in directory: " + \
