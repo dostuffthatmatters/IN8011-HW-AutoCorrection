@@ -97,22 +97,38 @@ class Testing:
         # *********************************************************************
         # Test 4 (Manual): Execute the file and store the generated output
 
-        execution_string = f"./{filename}/program.out"
-
         # Executing the file
         process = subprocess.Popen(
-            execution_string, shell=True,
+            f"./{filename}/program.out", shell=True,
             stderr=subprocess.PIPE, stdout=subprocess.PIPE
         )
         output, error_message = process.communicate()
         exit_code = process.returncode
+        output = output.decode("utf-8", "replace")
 
-        result["result"] = "Success"
-        result["exit_code"] = exit_code
-        result["output"] = output.decode("utf-8", "replace")
-        while result["output"].endswith('\n'):
-            result["output"] = result["output"][:-1]
-        result["input"] = {}
+        if len(output) > 0:
+            result["result"] = "Success"
+            result["exit_code"] = exit_code
+            result["output"] = output
+            while result["output"].endswith('\n'):
+                result["output"] = result["output"][:-1]
+            result["input"] = {}
+        else:
+            # Executing the file
+            process = subprocess.Popen(
+                f".\{filename}\program.out", shell=True,
+                stderr=subprocess.PIPE, stdout=subprocess.PIPE
+            )
+            output, error_message = process.communicate()
+            exit_code = process.returncode
+            output = output.decode("utf-8", "replace")
+
+            result["result"] = "Success"
+            result["exit_code"] = exit_code
+            result["output"] = output
+            while result["output"].endswith('\n'):
+                result["output"] = result["output"][:-1]
+            result["input"] = {}
 
         for file in SUBMISSION_FILES:
             def read(enc):
