@@ -43,12 +43,13 @@ class Reporting:
         )
 
         for name in sorted(results.keys()):
+
             md.write_horizontal_line()
 
             if results[name]["result"] == "Failed":
                 md.write_heading(
                     f"{name} -> Failed:", color=(255, 0, 0),
-                    heading_type='h4'
+                    heading_type='h3'
                 )
                 md.write_codeblock(
                     code=f"{results[name]['message']}", language="bash"
@@ -62,7 +63,7 @@ class Reporting:
             else:
                 md.write_heading(
                     f"{name} -> Successful until execution:", color=(0, 200, 0),
-                    heading_type='h4'
+                    heading_type='h3'
                 )
                 md.write_text(f"Output Stream:", bold=True)
                 md.write_codeblock(

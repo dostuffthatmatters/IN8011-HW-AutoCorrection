@@ -43,7 +43,7 @@ class CustomMarkdown(object):
         file_object = open(self.file_name, "a")
         file_object.write(f"\n```{language}\n")
         file_object.write(f"{code}\n")
-        file_object.write(f"```\n\n" + "\n" * new_lines)
+        file_object.write(f"```\n" + "\n" * new_lines)
         file_object.close()
 
     def write_text(self, text, bold=False, italic=False, new_lines=0, color=None):
@@ -57,5 +57,5 @@ class CustomMarkdown(object):
 
     def write_horizontal_line(self):
         file_object = open(self.file_name, "a")
-        file_object.write(f"\n\n\n---\n\n\n\n\n")
+        file_object.write(f"\n\n<br/>\n\n---\n\n<br/>\n\n")
         file_object.close()
