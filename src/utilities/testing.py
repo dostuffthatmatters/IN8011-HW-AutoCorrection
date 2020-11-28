@@ -97,38 +97,29 @@ class Testing:
         # *********************************************************************
         # Test 4 (Manual): Execute the file and store the generated output
 
-        # Executing the file
-        process = subprocess.Popen(
-            f"./{filename}/program.out", shell=True,
-            stderr=subprocess.PIPE, stdout=subprocess.PIPE
-        )
-        output, error_message = process.communicate()
-        exit_code = process.returncode
-        output = output.decode("utf-8", "replace")
-
-        if len(output) > 0:
-            result["result"] = "Success"
-            result["exit_code"] = exit_code
-            result["output"] = output
-            while result["output"].endswith('\n'):
-                result["output"] = result["output"][:-1]
-            result["input"] = {}
-        else:
+        def run_executable(slash="/"):
             # Executing the file
             process = subprocess.Popen(
-                f".\{filename}\program.out", shell=True,
+                f".{slash}{filename}{slash}program.out", shell=True,
                 stderr=subprocess.PIPE, stdout=subprocess.PIPE
             )
             output, error_message = process.communicate()
             exit_code = process.returncode
             output = output.decode("utf-8", "replace")
 
+            assert len(output) > 0
+
             result["result"] = "Success"
             result["exit_code"] = exit_code
             result["output"] = output
             while result["output"].endswith('\n'):
                 result["output"] = result["output"][:-1]
             result["input"] = {}
+
+        try:
+            run_executable(slash="/")
+        except:
+            run_executable(slash="\\")
 
         for file in SUBMISSION_FILES:
             def read(enc):
