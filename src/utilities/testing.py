@@ -3,6 +3,7 @@ import os
 import shutil
 import zipfile
 import subprocess
+import time
 
 
 class Testing:
@@ -111,17 +112,29 @@ class Testing:
                 f".{slash}{filename}{slash}program.out", shell=True,
                 stderr=subprocess.PIPE, stdout=subprocess.PIPE
             )
-            output, error_message = process.communicate()
-            exit_code = process.returncode
-            output = output.decode("utf-8", "replace")
 
-            assert len(output) > 0
+            TIMEOUT = 10
+            for i in range(TIMEOUT):
+                if process.poll() is not None:
+                    output, error_message = process.communicate()
+                    output = output.decode("utf-8", "replace")
 
-            result["result"] = "Success"
-            result["exit_code"] = exit_code
-            result["output"] = output
-            while result["output"].endswith('\n'):
-                result["output"] = result["output"][:-1]
+                    assert len(output) > 0
+
+                    result["result"] = "Success"
+                    result["exit_code"] = process.returncode
+                    result["output"] = output
+                    while result["output"].endswith('\n'):
+                        result["output"] = result["output"][:-1]
+                    result["input"] = {}
+                    return
+                else:
+                    time.sleep(1)
+
+            process.kill()
+            result["result"] = "Failed"
+            result["exit_code"] = 1
+            result["output"] = f"Execution Timeout: Limit = {TIMEOUT}s"
             result["input"] = {}
 
         try:
