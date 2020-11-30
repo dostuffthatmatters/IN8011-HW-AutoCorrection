@@ -13,7 +13,7 @@ from src.utilities.testing import Testing
 class Main:
 
     @staticmethod
-    def run(config, print_results=True, timeout=15):
+    def run(config, print_results=True, timeout=15, line_numbers=True):
 
         Validator.config(config)
         Validator.file_system(config)
@@ -44,7 +44,8 @@ class Main:
         Main._log(5, "Generating full report in markdown")
         Reporting.generate_markdown(
             results,
-            config.get('HW_NUMBER')
+            config.get('HW_NUMBER'),
+            line_numbers=line_numbers
         )
 
         # *************************************************************************

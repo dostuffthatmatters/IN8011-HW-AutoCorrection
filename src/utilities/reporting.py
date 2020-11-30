@@ -35,7 +35,7 @@ class Reporting:
         cp.print_line(bold=True, character='-')
 
     @staticmethod
-    def generate_markdown(results, hw_number):
+    def generate_markdown(results, hw_number, line_numbers):
         location = f"reports/results_HW{'0' if hw_number < 10 else ''}{hw_number}.md"
         md = cm(location)
 
@@ -77,5 +77,5 @@ class Reporting:
                         f"Input File `{input_file}`:", bold=True)
                     md.write_codeblock(
                         code=results[name]["input"][input_file],
-                        language="c", new_lines=0, line_numbers=True
+                        language="c", new_lines=0, line_numbers=line_numbers
                     )
