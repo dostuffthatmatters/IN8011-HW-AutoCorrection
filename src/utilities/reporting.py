@@ -24,9 +24,10 @@ class Reporting:
                     color='green', bold=True
                 )
                 cp.print(
-                    f"\nThe execution took {results[name]['execution_time']} seconds"
+                    f"\nThe execution took {results[name]['execution_time']} seconds. ",
+                    new_lines=0
                 )
-                cp.print(f"\nOutput Stream:", bold=True)
+                cp.print(f"Output Stream:", bold=True)
                 cp.print_line(character='.')
                 cp.print(results[name]["output"])
                 cp.print_line(character='.', new_lines=2)
@@ -59,13 +60,15 @@ class Reporting:
             )
             if not failed:
                 md.write_text(
-                    f"\nThe execution took {results[name]['execution_time']} seconds"
+                    f"\nThe execution took {results[name]['execution_time']} seconds. ",
+                    new_lines=0
                 )
             md.write_text(
                 "Error Message:" if failed else "Output Stream:", bold=True
             )
             md.write_codeblock(
-                code=results[name]["output"], language="bash"
+                code=results[name]["output"],
+                language="bash", line_numbers=False
             )
 
             if "input" in results[name]:
@@ -73,4 +76,6 @@ class Reporting:
                     md.write_text(
                         f"Input File `{input_file}`:", bold=True)
                     md.write_codeblock(
-                        code=results[name]["input"][input_file], language="c", new_lines=0)
+                        code=results[name]["input"][input_file],
+                        language="c", new_lines=0, line_numbers=True
+                    )

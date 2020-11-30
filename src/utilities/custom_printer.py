@@ -45,7 +45,7 @@ class CustomPrinter(object):
         if underline:
             text = CustomPrinter._get_underlined_text(text)
 
-        print(str(text), end=("\n"*new_lines if new_lines > 0 else ""))
+        print(str(text), end=("" + ("\n"*new_lines)))
 
     @staticmethod
     def print_line(character='-', color='default', new_lines=1, bold=False):
