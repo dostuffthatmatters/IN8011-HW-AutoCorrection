@@ -1,5 +1,23 @@
 # IN8011 - Homework AutoCorrection
 
+### New stuff 30.11.20
+
+Optional line numbers in report for submission files.
+Execution time is measured and shown in printout and report.
+Configurable execution timeout (when the execution will be aborted).
+
+```python
+from src.main import Main
+from configs.config_01 import config
+
+if __name__ == "__main__":
+    Main.run(config, timeout=15, line_numbers=True)
+```
+
+If you don't specify `timeout` or `line_numbers`, these will be the default values.
+
+<br/>
+
 ### File Structure
 
 Inside **`configs/`** you can find all configs for each homework.
