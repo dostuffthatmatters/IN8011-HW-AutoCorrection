@@ -13,7 +13,7 @@ from src.utilities.testing import Testing
 class Main:
 
     @staticmethod
-    def run(config, print_results=True):
+    def run(config, print_results=True, timeout=15):
 
         Validator.config(config)
         Validator.file_system(config)
@@ -33,7 +33,7 @@ class Main:
 
         results = {}
         for filename in tqdm(filenames):
-            results[filename] = Testing.run(filename, config)
+            results[filename] = Testing.run(filename, config, timeout=timeout)
 
         # *************************************************************************
         Main._log(4, "Removing test directories")

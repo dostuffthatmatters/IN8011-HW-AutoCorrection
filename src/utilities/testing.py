@@ -9,7 +9,7 @@ import time
 class Testing:
 
     @staticmethod
-    def run(filename, config):
+    def run(filename, config, timeout):
         GIVEN_FILES = config.get("GIVEN_FILES")
         SUBMISSION_FILES = config.get("SUBMISSION_FILES")
         COMPILATION_FILES = config.get("COMPILATION_FILES")
@@ -113,8 +113,7 @@ class Testing:
                 stderr=subprocess.PIPE, stdout=subprocess.PIPE
             )
 
-            TIMEOUT = 10
-            for i in range(TIMEOUT):
+            for i in range(int(timeout*10)):
                 if process.poll() is not None:
                     output, error_message = process.communicate()
                     output = output.decode("utf-8", "replace")
@@ -123,18 +122,19 @@ class Testing:
 
                     result["result"] = "Success"
                     result["exit_code"] = process.returncode
+                    result["execution_time"] = i*10
                     result["output"] = output
                     while result["output"].endswith('\n'):
                         result["output"] = result["output"][:-1]
                     result["input"] = {}
                     return
                 else:
-                    time.sleep(1)
+                    time.sleep(0.1)
 
             process.kill()
             result["result"] = "Failed"
             result["exit_code"] = 1
-            result["output"] = f"Execution Timeout: Limit = {TIMEOUT}s"
+            result["output"] = f"Execution Timeout: Limit = {timeout}s"
             result["input"] = {}
 
         try:
