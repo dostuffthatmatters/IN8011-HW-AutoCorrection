@@ -4,6 +4,8 @@ import shutil
 import zipfile
 import subprocess
 import time
+import platform
+from datetime import datetime
 
 
 class Testing:
@@ -22,8 +24,12 @@ class Testing:
         directory_content = list(
             filter(lambda x: x.endswith(".zip"), os.listdir(f"./{filename}"))
         )
+        if len(directory_content) == 0:
+            result["result"] = "Failed due to given submission folder"
+            result["output"] = f"No zip-files in directory!"
+            return result  # Jump to next attendee
         if len(directory_content) > 1:
-            result["result"] = "Failed"
+            result["result"] = "Failed due to file requirements"
             result["output"] = f"Too many zip-files in directory: " + \
                 f"{directory_content}"
             return result  # Jump to next attendee
@@ -38,7 +44,7 @@ class Testing:
             with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
                 zip_ref.extractall(student_path)
         except:
-            result["result"] = "Failed"
+            result["result"] = "Failed during zip-extraction"
             result["output"] = f"Could not extract files from zip-file"
             return result  # Jump to next attendee
 
@@ -58,7 +64,7 @@ class Testing:
                 filter(lambda f: f != directory_content[0], desired_files))
             actual_files = list(
                 filter(lambda f: f != directory_content[0], actual_files))
-            result["result"] = "Failed"
+            result["result"] = "Failed due to file requirements"
             result["output"] = f"Wrong files in zip-file:" + \
                 f" Desired: {desired_files}, Actual: {actual_files}"
             return result  # Jump to next attendee
@@ -97,7 +103,7 @@ class Testing:
             while output.endswith('\n'):
                 output = output[:-1]
 
-            result["result"] = "Failed"
+            result["result"] = "Failed during compilation"
             result["output"] = output
             result["input"] = {}
 
@@ -111,65 +117,55 @@ class Testing:
         # *********************************************************************
         # Test 4 (Manual): Execute the file and store the generated output
 
-        def run_executable(slash="/", last_try=False):
-            # Executing the file
-            process = subprocess.Popen(
-                f".{slash}{filename}{slash}program.out", shell=True,
-                stderr=subprocess.PIPE, stdout=subprocess.PIPE
-            )
-
-            for i in range(int(timeout*10)):
-                if process.poll() is not None:
-                    output, error_message = process.communicate()
-                    error_message = error_message.decode("utf-8", "replace")
-                    output = output.decode("utf-8", "replace")
-
-                    if not last_try:
-                        assert len(output) > 0
-
-                    if len(output) != 0:
-                        result["result"] = "Success"
-                        result["output"] = output
-                    else:
-                        # Implicates that this was the last try
-                        result["result"] = "Error during execution"
-                        result["output"] = f"{error_message}"
-
-                    result["exit_code"] = process.returncode
-                    result["execution_time"] = i/10.0
-                    result["input"] = {}
-                    return
-                else:
-                    time.sleep(0.1)
-
-            process.kill()
-            result["result"] = "Failed"
-            result["exit_code"] = 1
-            result["output"] = f"Execution Timeout: Limit = {timeout}s"
-            result["input"] = {}
+        if platform.system() == "Windows":
+            cmd = f".\\{filename}\\program.out"
+        elif platform.system() in ["Darwin", "Linux"]:
+            cmd = f"./{filename}/program.out"
+        else:
+            raise Exception("Operating System unknown")
 
         try:
-            run_executable(slash="\\")
-        except:
-            run_executable(slash="/", last_try=True)
+            t1 = datetime.now()
+            output = subprocess.check_output(
+                cmd, shell=True, stderr=subprocess.PIPE,
+                timeout=timeout
+            )
+            result["result"] = "Successful execution (exit code 0)"
+            result["output"] = output.decode("utf-8", "replace")
+            result["exit_code"] = 0
+
+            td = datetime.now() - t1
+            result["execution_time"] = round(
+                td.seconds + (td.microseconds/1_000_000), 3
+            )
+
+        except subprocess.CalledProcessError as e:
+            # Non Zero Exit code
+            result["result"] = f"Failed during execution (exit code {e.returncode})"
+            result["exit_code"] = e.returncode
+            result["output"] = e.output.decode("utf-8", "replace")
+        except subprocess.TimeoutExpired as e:
+            # Timeout reached
+            result["result"] = "Failed during execution"
+            result["exit_code"] = 1
+            result["output"] = f"Execution Timeout: Limit = {timeout}s"
+
+        result["input"] = {}
 
         for file in SUBMISSION_FILES:
-            def read(enc):
-                return open(
-                    f"./{filename}/{file}", 'r',
-                    encoding=enc
-                ).read()
-
-            try:
-                result["input"][file] = read('utf-8')
-            except:
+            for enc in ['utf-8', 'utf-16', 'iso-8859-15']:
                 try:
-                    result["input"][file] = read('utf-16')
+                    result["input"][file] = open(
+                        f"./{filename}/{file}", 'r',
+                        encoding=enc
+                    ).read()
+                    break
                 except:
-                    try:
-                        result["input"][file] = read('iso-8859-15')
-                    except:
-                        result["input"][file] = "Really weird file encoding ... Please look at the file directly!"
+                    continue
+
+            if file not in result["input"]:
+                result["input"][file] = \
+                    "Really weird file encoding ..."
 
         return result
 

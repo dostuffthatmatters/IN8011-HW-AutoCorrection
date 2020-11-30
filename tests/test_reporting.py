@@ -17,10 +17,9 @@ def test_reporting():
 
     assert(len(re.findall("6 submissions have been tested", report)) == 1)
 
-    assert(len(re.findall(".*Successful until execution:", report)) == 3)
+    assert(len(re.findall(".*Successful execution \(exit code 0\)", report)) == 3)
     assert(len(re.findall("<span style='color: rgb\(0, 200, 0\)'>.*", report)) == 3)
 
-    assert(len(re.findall(".*Failed:", report)) == 3)
     assert(len(re.findall("<span style='color: rgb\(255, 0, 0\)'>.*", report)) == 3)
 
     assert(len(re.findall("(```c)([^`]+)(```)", report)) == 4), \

@@ -12,15 +12,18 @@ class Reporting:
 
         for name in sorted(results.keys()):
             cp.print_line(bold=True, character='-', new_lines=2)
-            if results[name]["result"] == "Failed":
-                cp.print(f"{name} -> Failed:", color='red', bold=True)
+            if not results[name]["result"].startswith("Success"):
+                cp.print(
+                    f"{name} -> {results[name]['result']}",
+                    color='red', bold=True
+                )
                 cp.print(f"\nError Message:", bold=True)
                 cp.print_line(character='.')
                 cp.print(f"{results[name]['output']}")
                 cp.print_line(character='.', new_lines=2)
             else:
                 cp.print(
-                    f"{name} -> Successful until execution:",
+                    f"{name} -> {results[name]['result']}",
                     color='green', bold=True
                 )
                 cp.print(
@@ -50,11 +53,10 @@ class Reporting:
 
         for name in sorted(results.keys()):
             md.write_horizontal_line()
-            failed = (results[name]["result"] == "Failed")
+            failed = not results[name]["result"].startswith("Success")
 
             md.write_heading(
-                f"{name} -> " +
-                ("Failed:" if failed else "Successful until execution:"),
+                f"{name} -> {results[name]['result']}",
                 color=((255, 0, 0) if failed else (0, 200, 0)),
                 heading_type='h3'
             )
