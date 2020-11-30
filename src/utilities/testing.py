@@ -122,7 +122,7 @@ class Testing:
 
                     result["result"] = "Success"
                     result["exit_code"] = process.returncode
-                    result["execution_time"] = i*10
+                    result["execution_time"] = i/10.0
                     result["output"] = output
                     while result["output"].endswith('\n'):
                         result["output"] = result["output"][:-1]

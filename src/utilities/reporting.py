@@ -23,6 +23,9 @@ class Reporting:
                     f"{name} -> Successful until execution:",
                     color='green', bold=True
                 )
+                cp.print(
+                    f"\nThe execution took {results[name]['execution_time']} seconds"
+                )
                 cp.print(f"\nOutput Stream:", bold=True)
                 cp.print_line(character='.')
                 cp.print(results[name]["output"])
@@ -54,6 +57,10 @@ class Reporting:
                 color=((255, 0, 0) if failed else (0, 200, 0)),
                 heading_type='h3'
             )
+            if not failed:
+                md.write_text(
+                    f"\nThe execution took {results[name]['execution_time']} seconds"
+                )
             md.write_text(
                 "Error Message:" if failed else "Output Stream:", bold=True
             )
