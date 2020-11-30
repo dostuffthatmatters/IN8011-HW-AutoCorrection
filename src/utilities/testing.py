@@ -34,8 +34,13 @@ class Testing:
         # Extract files from zip-files
         student_path = f"./{filename}"
         zip_file_path = f"./{filename}/{directory_content[0]}"
-        with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-            zip_ref.extractall(student_path)
+        try:
+            with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+                zip_ref.extractall(student_path)
+        except:
+            result["result"] = "Failed"
+            result["output"] = f"Could not extract files from zip-file"
+            return result  # Jump to next attendee
 
         # If the contents of the folder do not match the requirements, which are:
         # Each students directory now has the zip-file in it and
@@ -106,7 +111,7 @@ class Testing:
         # *********************************************************************
         # Test 4 (Manual): Execute the file and store the generated output
 
-        def run_executable(slash="/"):
+        def run_executable(slash="/", last_try=False):
             # Executing the file
             process = subprocess.Popen(
                 f".{slash}{filename}{slash}program.out", shell=True,
@@ -116,16 +121,22 @@ class Testing:
             for i in range(int(timeout*10)):
                 if process.poll() is not None:
                     output, error_message = process.communicate()
+                    error_message = error_message.decode("utf-8", "replace")
                     output = output.decode("utf-8", "replace")
 
-                    assert len(output) > 0
+                    if not last_try:
+                        assert len(output) > 0
 
-                    result["result"] = "Success"
+                    if len(output) != 0:
+                        result["result"] = "Success"
+                        result["output"] = output
+                    else:
+                        # Implicates that this was the last try
+                        result["result"] = "Error during execution"
+                        result["output"] = f"{error_message}"
+
                     result["exit_code"] = process.returncode
                     result["execution_time"] = i/10.0
-                    result["output"] = output
-                    while result["output"].endswith('\n'):
-                        result["output"] = result["output"][:-1]
                     result["input"] = {}
                     return
                 else:
@@ -138,9 +149,9 @@ class Testing:
             result["input"] = {}
 
         try:
-            run_executable(slash="/")
-        except:
             run_executable(slash="\\")
+        except:
+            run_executable(slash="/", last_try=True)
 
         for file in SUBMISSION_FILES:
             def read(enc):
