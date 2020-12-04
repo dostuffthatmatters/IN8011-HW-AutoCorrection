@@ -1,5 +1,30 @@
 # IN8011 - Homework AutoCorrection
 
+### New stuff 04.12.20
+
+Optional execution of the submissions.
+
+Manual solution for upcoming IO based homework submissions
+(when the testign relies on User Input.)
+
+```python
+from src.main import Main
+from configs.config_01 import config
+
+if __name__ == "__main__":
+    Main.run(config, execute=True)
+```
+
+For `execute=True` (default): All the test steps including
+execution and removal of all generated temporary directories.
+
+For `execute=False` (default): All the test steps but without
+executing the compiled program. The temporarily generated test
+directories will also not be deleted. In there one can manually
+run the already compiled executable for each submission.
+
+<br/>
+
 ### New stuff 30.11.20
 
 Optional line numbers in report for submission files.
