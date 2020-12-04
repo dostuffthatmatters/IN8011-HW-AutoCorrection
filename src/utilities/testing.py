@@ -70,6 +70,26 @@ class Testing:
             return result  # Jump to next attendee
 
         # *********************************************************************
+        # If all files to be submitted exist: Add these to the result
+
+        result["input"] = {}
+
+        for file in SUBMISSION_FILES:
+            for enc in ['utf-8', 'utf-16', 'iso-8859-15']:
+                try:
+                    result["input"][file] = open(
+                        f"./{filename}/{file}", 'r',
+                        encoding=enc
+                    ).read()
+                    break
+                except:
+                    continue
+
+            if file not in result["input"]:
+                result["input"][file] = \
+                    "Really weird file encoding ..."
+
+        # *********************************************************************
         # Test 3: Does Compilation work as expected?
 
         # Copy all given files into the students directory to compile them together
@@ -105,12 +125,6 @@ class Testing:
 
             result["result"] = "Failed during compilation"
             result["output"] = output
-            result["input"] = {}
-
-            for file in SUBMISSION_FILES:
-                result["input"][file] = open(
-                    f"./{filename}/{file}", 'r'
-                ).read()
 
             return result  # Jump to next attendee
 
@@ -149,23 +163,6 @@ class Testing:
             result["result"] = "Failed during execution"
             result["exit_code"] = 1
             result["output"] = f"Execution Timeout: Limit = {timeout}s"
-
-        result["input"] = {}
-
-        for file in SUBMISSION_FILES:
-            for enc in ['utf-8', 'utf-16', 'iso-8859-15']:
-                try:
-                    result["input"][file] = open(
-                        f"./{filename}/{file}", 'r',
-                        encoding=enc
-                    ).read()
-                    break
-                except:
-                    continue
-
-            if file not in result["input"]:
-                result["input"][file] = \
-                    "Really weird file encoding ..."
 
         return result
 
