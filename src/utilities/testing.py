@@ -11,7 +11,7 @@ from datetime import datetime
 class Testing:
 
     @staticmethod
-    def run(filename, config, timeout):
+    def run(filename, config, timeout, execute):
         GIVEN_FILES = config.get("GIVEN_FILES")
         SUBMISSION_FILES = config.get("SUBMISSION_FILES")
         COMPILATION_FILES = config.get("COMPILATION_FILES")
@@ -104,14 +104,11 @@ class Testing:
             file in directory_content for file in (SUBMISSION_FILES + GIVEN_FILES)
         ]))
 
-        # Determining the compilation string
-        compilation_string = Testing._get_compilation_string(
-            f"./{filename}", COMPILATION_FILES
-        )
-
         # Compiling the file
         process = subprocess.Popen(
-            compilation_string,
+            Testing._get_compilation_string(
+                f"./{filename}", COMPILATION_FILES
+            ),
             shell=True,
             stderr=subprocess.PIPE,
             stdout=subprocess.PIPE
@@ -131,38 +128,42 @@ class Testing:
         # *********************************************************************
         # Test 4 (Manual): Execute the file and store the generated output
 
-        if platform.system() == "Windows":
-            cmd = f".\\{filename}\\program.out"
-        elif platform.system() in ["Darwin", "Linux"]:
-            cmd = f"./{filename}/program.out"
+        if execute:
+            if platform.system() == "Windows":
+                cmd = f".\\{filename}\\program.out"
+            elif platform.system() in ["Darwin", "Linux"]:
+                cmd = f"./{filename}/program.out"
+            else:
+                raise Exception("Operating System unknown")
+
+            try:
+                t1 = datetime.now()
+                output = subprocess.check_output(
+                    cmd, shell=True, stderr=subprocess.PIPE,
+                    timeout=timeout
+                )
+                result["result"] = "Successful execution (exit code 0)"
+                result["output"] = output.decode("utf-8", "replace")
+                result["exit_code"] = 0
+
+                td = datetime.now() - t1
+                result["execution_time"] = round(
+                    td.seconds + (td.microseconds/1_000_000), 3
+                )
+
+            except subprocess.CalledProcessError as e:
+                # Non Zero Exit code
+                result["result"] = f"Failed during execution (exit code {e.returncode})"
+                result["exit_code"] = e.returncode
+                result["output"] = e.output.decode("utf-8", "replace")
+            except subprocess.TimeoutExpired as e:
+                # Timeout reached
+                result["result"] = "Failed during execution"
+                result["exit_code"] = 1
+                result["output"] = f"Execution Timeout: Limit = {timeout}s"
         else:
-            raise Exception("Operating System unknown")
-
-        try:
-            t1 = datetime.now()
-            output = subprocess.check_output(
-                cmd, shell=True, stderr=subprocess.PIPE,
-                timeout=timeout
-            )
-            result["result"] = "Successful execution (exit code 0)"
-            result["output"] = output.decode("utf-8", "replace")
-            result["exit_code"] = 0
-
-            td = datetime.now() - t1
-            result["execution_time"] = round(
-                td.seconds + (td.microseconds/1_000_000), 3
-            )
-
-        except subprocess.CalledProcessError as e:
-            # Non Zero Exit code
-            result["result"] = f"Failed during execution (exit code {e.returncode})"
-            result["exit_code"] = e.returncode
-            result["output"] = e.output.decode("utf-8", "replace")
-        except subprocess.TimeoutExpired as e:
-            # Timeout reached
-            result["result"] = "Failed during execution"
-            result["exit_code"] = 1
-            result["output"] = f"Execution Timeout: Limit = {timeout}s"
+            result["result"] = "Successful compilation"
+            result["output"] = "Execution disabled and tmp directories not removed."
 
         return result
 
