@@ -129,10 +129,16 @@ class Testing:
         # Test 4 (Manual): Execute the file and store the generated output
 
         if execute:
+            custom_stdin = "stdin.txt" in os.listdir(f"./{filename}")
+
             if platform.system() == "Windows":
                 cmd = f".\\{filename}\\program.out"
+                if custom_stdin:
+                    cmd += f" < .\\{filename}\\stdin.txt"
             elif platform.system() in ["Darwin", "Linux"]:
                 cmd = f"./{filename}/program.out"
+                if custom_stdin:
+                    cmd += f" < ./{filename}/stdin.txt"
             else:
                 raise Exception("Operating System unknown")
 
