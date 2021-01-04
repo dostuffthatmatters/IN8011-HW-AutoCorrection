@@ -13,7 +13,7 @@ from src.utilities.testing import Testing
 class Main:
 
     @staticmethod
-    def run(config, print_results=True, timeout=15, line_numbers=True, execute=True):
+    def run(config, print_results=True, timeout=15, line_numbers=True, execute=True, keep_tmp=False):
 
         Validator.config(config)
         Validator.file_system(config)
@@ -39,7 +39,7 @@ class Main:
         # *************************************************************************
         Main._log(4, "Removing test directories" +
                   " (disabled)" if not execute else "")
-        if execute:
+        if execute and not keep_tmp:
             Main._clear_submission_directory('.')
         os.chdir("../../")
 
